@@ -31,7 +31,7 @@ const renderTripEdit = (container) => {
 };
 
 const renderTripItem = (container, array, count) => {
-  for (let i = 0; i < count; i++) {
+  for (let i = 1; i < count; i++) {
     let {type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers} = array[i];
     container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers}));
   }
@@ -46,9 +46,9 @@ renderTripEdit(tripEventsContainer);
 // renderComponent(getTripDayTemplate(), tripEventsContainer, 3);
 renderComponent(getTripDayTemplate(), tripEventsContainer, 3, `beforeend`, () => {
   const tripEventList = document.querySelector(`.trip-events__list`);
-  const tripDays = document.querySelector(`.trip-days`);
+  // const tripDays = document.querySelector(`.trip-days`);
 
-  renderTripItem(tripDays, sortedMockArray, sortedMockArray.length);
+  renderTripItem(tripEventList, sortedMockArray, sortedMockArray.length);
   console.log(mockItem);
   console.log(tripEventList);
 });
