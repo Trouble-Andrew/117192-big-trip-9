@@ -19,3 +19,10 @@ export const diffGetTime = function (date1, date2) {
   msec -= mm * 1000 * 60;
   return `${hh}H:${mm}M`;
 };
+
+export const sortArrayOfObjByDate = function (array) {
+  let byDate = array.slice(0);
+  return byDate.sort(function (a, b) {
+    return a.startTimeEdit.getTime() - b.startTimeEdit.getTime();
+  });
+};

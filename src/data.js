@@ -1,5 +1,7 @@
 import {shuffle, diffGetTime} from './utils.js';
 
+export const mockArray = [];
+
 const type = new Set([
   `bus`,
   `check-in`,
@@ -17,15 +19,15 @@ const location = new Set([
   `Geneva`,
   `Saint-Petersburg`,
   `Chamonix`,
-  `hotel`,
+  // `hotel`,
   `Amsterdam`,
-  `airport`,
+  // `airport`,
   `New-York`,
   `Paris`,
   `Prague`,
 ]);
 const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet letius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus letius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-const startTime = () => Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000 - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000;
+const startTime = () => Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000;
 const offers = [
   {
     title: `Add luggage`,
@@ -64,11 +66,22 @@ export const getEvent = function () {
     photo: `http://picsum.photos/300/150?r=${Math.random()}`,
     description: shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`),
     startTime: date1.toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`}),
+    // startTimeEdit: date1.toLocaleString(`en-GB`),
+    startTimeEdit: date1,
     endTime: date2.toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`}),
+    endTimeEdit: date2,
     diffTime: diffGetTime(date1, date2),
     price: Math.floor(Math.random() * 2000) + 20,
-    offers: offers.filter((offer) => offer.isChecked),
+    offers,
+    isFavorite: Boolean(Math.round(Math.random())),
   };
 };
 
+const addObjToArray = () => {
+  for (let i = 0; i < 5; i++) {
+    mockArray.push(getEvent());
+  }
+};
+
 export const mockItem = getEvent();
+addObjToArray();
