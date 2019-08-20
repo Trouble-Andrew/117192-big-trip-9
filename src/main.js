@@ -13,23 +13,7 @@ const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsContainer = document.querySelector(`.trip-controls h2:nth-child(2)`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
 
-console.log(mockArray);
 export const sortedMockArray = sortArrayOfObjByDate(mockArray);
-console.log(sortedMockArray);
-
-// const datesArr = new Set([]);
-// sortedMockArray.forEach(function (item) {
-//   datesArr.add(item.startTimeEdit.getDate());
-// });
-// console.log(datesArr);
-
-// const tripEventList = document.querySelector(`.trip-events__list`);
-
-// const renderTripItem = (container, mockItem) => {
-//   let {type, location, photo, description, startTime, endTime, diffTime, price, offers} = mockItem;
-//   container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type, location, photo, description, startTime, endTime, diffTime, price, offers}));
-//   // tasksForLoad = tasksForLoad.slice(1);
-// };
 
 const renderTripEdit = (container) => {
   let {type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, price, offers, isFavorite} = sortedMockArray[0];
@@ -37,9 +21,17 @@ const renderTripEdit = (container) => {
 };
 
 const renderTripItem = (container, array, count) => {
+  let dayCounter = 1;
+  let currentDay = array[0].startTimeEdit.getDate();
+  container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type: array[0].type, location: array[0].location, photo: array[0].photo, description: array[0].description, startTime: array[0].startTime, startTimeEdit: array[0].startTimeEdit, endTime: array[0].endTime, endTimeEdit: array[0].endTimeEdit, diffTime: array[0].diffTime, price: array[0].price, offers: array[0].offers, dayCounter}));
   for (let i = 1; i < count; i++) {
     let {type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers} = array[i];
-    container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers}));
+    if (currentDay !== array[i].startTimeEdit.getDate()) {
+      dayCounter += 1;
+      container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers, dayCounter}));
+    } else {
+      container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, diffTime, price, offers}));
+    }
   }
 };
 
@@ -47,13 +39,10 @@ renderComponent(getTripInfoTemplate(), tripInfoContainer, 1, `afterbegin`);
 renderComponent(getTripControlsTemplate(), tripControlsContainer, 1, `beforebegin`);
 renderComponent(getTripFiltersTemplate(), tripControlsContainer, 1, `afterend`);
 renderComponent(getTripSortTemplate(), tripEventsContainer);
-// renderComponent(getTripItemEditTemplate(), tripEventsContainer);
 renderTripEdit(tripEventsContainer);
-// renderComponent(getTripDayTemplate(), tripEventsContainer, 3);
 renderComponent(getTripDayTemplate(), tripEventsContainer, 3, `beforeend`, () => {
-  const tripEventList = document.querySelector(`.trip-events__list`);
-  // const tripDays = document.querySelector(`.trip-days`);
-  renderTripItem(tripEventList, sortedMockArray, sortedMockArray.length);
+  const tripDays = document.querySelector(`.trip-days`);
+  renderTripItem(tripDays, sortedMockArray, sortedMockArray.length);
 });
 
 fillTripInfo(sortedMockArray);

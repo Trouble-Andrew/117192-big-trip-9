@@ -1,4 +1,4 @@
-export const getTripItemEditTemplate = ({type, location, photo, description, startTime, startTimeEdit, endTime, endTimeEdit, price, offers, isFavorite}) => `
+export const getTripItemEditTemplate = ({type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite}) => `
   <form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
