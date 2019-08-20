@@ -26,3 +26,24 @@ export const sortArrayOfObjByDate = function (array) {
     return a.startTimeEdit.getTime() - b.startTimeEdit.getTime();
   });
 };
+
+export const fillTripInfo = (array) => {
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  let tripCities = new Set([]);
+  let tripDates = new Set([]);
+  let tripCost = [];
+
+  let tripCitiesElem = document.querySelector(`.trip-info__title`);
+  let tripDatesElem = document.querySelector(`.trip-info__dates`);
+  let tripCostElem = document.querySelector(`.trip-info__cost`);
+
+  array.forEach(function (item) {
+    tripCities.add(item.location);
+    tripDates.add(item.startTimeEdit.getDate());
+    tripCost.push(item.price);
+  });
+
+  tripCitiesElem.innerHTML = `${Array.from(tripCities).join(`-`)}`;
+  tripDatesElem.innerHTML = `${array[0].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})} - ${array[array.length - 1].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})}`;
+  tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
+};

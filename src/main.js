@@ -5,9 +5,9 @@ import {getTripSortTemplate} from './components/trip-sort.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {getTripItemEditTemplate} from './components/trip-edit.js';
 import {getEventItemTemplate} from './components/event-item.js';
-import {sortArrayOfObjByDate} from './utils.js';
+import {sortArrayOfObjByDate, fillTripInfo} from './utils.js';
 import {renderComponent} from './render.js';
-import {mockArray, mockItem} from './data.js';
+import {mockArray} from './data.js';
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsContainer = document.querySelector(`.trip-controls h2:nth-child(2)`);
@@ -16,6 +16,12 @@ const tripEventsContainer = document.querySelector(`.trip-events`);
 console.log(mockArray);
 export const sortedMockArray = sortArrayOfObjByDate(mockArray);
 console.log(sortedMockArray);
+
+// const datesArr = new Set([]);
+// sortedMockArray.forEach(function (item) {
+//   datesArr.add(item.startTimeEdit.getDate());
+// });
+// console.log(datesArr);
 
 // const tripEventList = document.querySelector(`.trip-events__list`);
 
@@ -47,8 +53,7 @@ renderTripEdit(tripEventsContainer);
 renderComponent(getTripDayTemplate(), tripEventsContainer, 3, `beforeend`, () => {
   const tripEventList = document.querySelector(`.trip-events__list`);
   // const tripDays = document.querySelector(`.trip-days`);
-
   renderTripItem(tripEventList, sortedMockArray, sortedMockArray.length);
-  console.log(mockItem);
-  console.log(tripEventList);
 });
+
+fillTripInfo(sortedMockArray);
