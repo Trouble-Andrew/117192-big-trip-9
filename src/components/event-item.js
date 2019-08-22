@@ -1,6 +1,6 @@
 import {createElement} from './../utils.js';
 import {TripItemEdit} from './trip-edit.js';
-import {removeElement} from './../utils.js';
+import {removeElement, getAddNewEvent} from './../utils.js';
 
 export class TripItem {
   constructor({type, location, startTime, startTimeEdit, endTime, diffTime, price, offers, photo, description, endTimeEdit, isFavorite, dayCounter = null}) {
@@ -63,6 +63,7 @@ export class TripItem {
         removeElement(this._tripEdit.getElement());
         document.removeEventListener(`keydown`, onEscKeyDown);
         this._tripEdit.removeElement();
+        getAddNewEvent();
       });
   }
 

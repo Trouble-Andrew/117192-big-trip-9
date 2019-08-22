@@ -4,7 +4,7 @@ import {getTripFiltersTemplate} from './components/trip-filters.js';
 import {getTripSortTemplate} from './components/trip-sort.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {TripItem} from './components/event-item.js';
-import {sortArrayOfObjByDate, fillTripInfo} from './utils.js';
+import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent} from './utils.js';
 import {renderComponent} from './render.js';
 import {mockArray} from './data.js';
 
@@ -28,6 +28,7 @@ const renderTripItem = (arrayMock) => {
 
 let dayCounter = 1;
 let currentDay = sortedMockArray[0].startTimeEdit.getDate();
+sortedMockArray[0].dayCounter = dayCounter;
 renderTripItem(sortedMockArray[0]);
 for (let i = 1; i < sortedMockArray.length; i++) {
   if (currentDay !== sortedMockArray[i].startTimeEdit.getDate()) {
@@ -40,3 +41,4 @@ for (let i = 1; i < sortedMockArray.length; i++) {
 }
 
 fillTripInfo(sortedMockArray);
+getAddNewEvent();
