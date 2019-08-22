@@ -47,3 +47,35 @@ export const fillTripInfo = (array) => {
   tripDatesElem.innerHTML = `${array[0].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})} - ${array[array.length - 1].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})}`;
   tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
 };
+
+export const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+export const removeElement = (element) => {
+  element.remove();
+};
+
+export const render = (container, element, place) => {
+  switch (place) {
+    case Position.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Position.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
