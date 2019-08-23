@@ -79,3 +79,11 @@ export const unrender = (element) => {
     element.remove();
   }
 };
+
+export const getAddNewEvent = () => {
+  let tripEventsContainer = document.querySelector(`.trip-events`);
+  let allEvents = tripEventsContainer.querySelectorAll(`.trip-days__item`);
+  if (allEvents.length === 0) {
+    tripEventsContainer.innerHTML = `<p class="trip-events__msg">Click New Event to create your first point</p>`;
+  }
+};
