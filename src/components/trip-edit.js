@@ -1,8 +1,8 @@
 import {EventItemComponent} from './trip-item-component.js';
 
 export class TripItemEdit extends EventItemComponent {
-  constructor({type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite}) {
-    super({type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite});
+  constructor(params) {
+    super(params);
   }
 
   getTemplate() {

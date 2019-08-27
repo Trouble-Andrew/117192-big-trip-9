@@ -2,9 +2,9 @@ import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
 
 export class TripItem extends EventItemComponent {
-  constructor({type, location, startTime, startTimeEdit, endTime, diffTime, price, offers, photo, description, endTimeEdit, isFavorite, dayCounter = null}) {
-    super({type, location, startTime, startTimeEdit, endTime, diffTime, price, offers, photo, description, endTimeEdit, isFavorite, dayCounter});
-    this._allObj = {type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite};
+  constructor(params) {
+    super(params);
+    this._allObj = params;
     this._tripEdit = new TripItemEdit(this._allObj);
     this._tripItemContainer = document.querySelector(`.trip-days`);
   }
