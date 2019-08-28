@@ -1,35 +1,8 @@
-import {createElement} from './../utils.js';
+import {EventItemComponent} from './trip-item-component.js';
 
-export class TripItemEdit {
-  constructor({type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite}) {
-    this._element = null;
-    this._type = type;
-    this._location = location;
-    this._startTimeEdit = startTimeEdit;
-    this._price = price;
-    this._offers = offers;
-    this._photo = photo;
-    this._description = description;
-    this._endTimeEdit = endTimeEdit;
-    this._isFavorite = isFavorite;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    if (this._element) {
-      this._element = null;
-    }
-  }
-
-  renderElement(container) {
-    container.append(this.getElement());
+export class TripItemEdit extends EventItemComponent {
+  constructor(params) {
+    super(params);
   }
 
   getTemplate() {

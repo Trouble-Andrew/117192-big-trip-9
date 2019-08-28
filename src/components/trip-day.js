@@ -1,5 +1,4 @@
-export const getTripDayTemplate = () => `
-  <ul class="trip-days">
+export const getTripDayTemplate = () => `<ul class="trip-days">
 
   </ul>
   `;

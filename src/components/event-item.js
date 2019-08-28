@@ -1,70 +1,12 @@
-import {createElement} from './../utils.js';
+import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
-import {removeElement, getAddNewEvent} from './../utils.js';
 
-export class TripItem {
-  constructor({type, location, startTime, startTimeEdit, endTime, diffTime, price, offers, photo, description, endTimeEdit, isFavorite, dayCounter = null}) {
-    this._element = null;
-    this._type = type;
-    this._location = location;
-    this._startTime = startTime;
-    this._startTimeEdit = startTimeEdit;
-    this._endTime = endTime;
-    this._diffTime = diffTime;
-    this._price = price;
-    this._offers = offers;
-    this._dayCounter = dayCounter;
-    this._allObj = {type, location, photo, description, startTimeEdit, endTimeEdit, price, offers, isFavorite};
+export class TripItem extends EventItemComponent {
+  constructor(params) {
+    super(params);
+    this._allObj = params;
     this._tripEdit = new TripItemEdit(this._allObj);
     this._tripItemContainer = document.querySelector(`.trip-days`);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    if (this._element) {
-      this._element = null;
-    }
-  }
-
-  renderElement(container) {
-    container.append(this.getElement());
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        container.replaceChild(this.getElement(), this._tripEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    this.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        container.replaceChild(this._tripEdit.getElement(), this.getElement());
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
-
-    this._tripEdit.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        this._tripItemContainer.replaceChild(this.getElement(), this._tripEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    this._tripEdit.getElement()
-      .querySelector(`.event__reset-btn`)
-      .addEventListener(`click`, () => {
-        removeElement(this._tripEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-        this._tripEdit.removeElement();
-        getAddNewEvent();
-      });
   }
 
   getTemplate() {
