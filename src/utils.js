@@ -17,7 +17,7 @@ export const diffGetTime = function (date1, date2) {
   msec -= hh * 1000 * 60 * 60;
   let mm = Math.floor(msec / 1000 / 60);
   msec -= mm * 1000 * 60;
-  return `${hh}H:${mm}M`;
+  return `${hh}H:${mm.length === 1 ? mm + `0` : mm}M`;
 };
 
 export const sortArrayOfObjByDate = function (array) {
