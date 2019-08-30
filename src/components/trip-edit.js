@@ -92,12 +92,12 @@ export class TripItemEdit extends EventItemComponent {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._startTimeEdit.toLocaleString(`en-GB`)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${new Date(this._startTime).toLocaleString(`en-GB`)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._endTimeEdit.toLocaleString(`en-GB`)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${new Date(this._endTime).toLocaleString(`en-GB`)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">

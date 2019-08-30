@@ -9,7 +9,7 @@ export class TripController {
     this._tripItems = tripItems;
     this._sort = new Sort();
     this._dayCounter = 1;
-    this._currentDay = this._tripItems[0].startTimeEdit.getDate();
+    this._currentDay = new Date(this._tripItems[0].startTime).getDate();
   }
 
   init() {
@@ -28,8 +28,8 @@ export class TripController {
     this._renderTripItem(itemArray[0]);
 
     for (let i = 1; i < itemArray.length; i++) {
-      if (this._currentDay !== itemArray[i].startTimeEdit.getDate()) {
-        this._dayCounter += 1;
+      if (this._currentDay !== new Date(itemArray[i].startTime).getDate()) {
+        this._dayCounter = new Date(itemArray[i].startTime).getDate() - this._currentDay;
         itemArray[i].dayCounter = this._dayCounter;
         this._renderTripItem(itemArray[i]);
       } else {
@@ -80,7 +80,8 @@ export class TripController {
         this._renderDays(this._tripItems);
         break;
       case `sort-time`:
-        const sortedByDate = this._tripItems.slice().sort((a, b) => parseInt(b.diffTime.replace(/[^+\d]/g, ``), 10) - parseInt(a.diffTime.replace(/[^+\d]/g, ``), 10));
+        const sortedByDate = this._tripItems.slice().sort((a, b) => (b.endTime - b.startTime) - (a.endTime - a.startTime));
+
         this._renderDays(sortedByDate);
         break;
       case `sort-price`:

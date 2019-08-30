@@ -1,4 +1,4 @@
-import {shuffle, diffGetTime} from './utils.js';
+import {shuffle} from './utils.js';
 
 export const mockArray = [];
 
@@ -27,7 +27,6 @@ const location = new Set([
   `Prague`,
 ]);
 const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet letius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus letius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-const startTime = () => Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000;
 const offers = [
   {
     title: `Add luggage`,
@@ -52,25 +51,14 @@ const offers = [
 ];
 
 export const getEvent = function () {
-  let date1Stamp = startTime();
-  let date1 = new Date();
-  date1.setTime(date1Stamp);
-  let date2Stamp = date1Stamp;
-  let date2 = new Date();
-  date2.setTime(date2Stamp);
-  date2.setMinutes(date2.getMinutes() + Math.floor(Math.random() * 59) + 1);
-  date2.setHours(date2.getHours() + Math.floor(Math.random() * 3) + 1);
+  let randomTimeStamp = +new Date(2019, (new Date(Date.now()).getMonth()), (Math.floor(Math.random() * 30) + new Date(Date.now()).getDate()), (Math.floor(Math.random() * 24)), (Math.floor(Math.random() * 60)), 0);
   return {
     type: shuffle(Array.from(type))[0],
     location: shuffle(Array.from(location))[0],
     photo: `http://picsum.photos/300/150?r=${Math.random()}`,
     description: shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`),
-    startTime: date1.toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`}),
-    // startTimeEdit: date1.toLocaleString(`en-GB`),
-    startTimeEdit: date1,
-    endTime: date2.toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`}),
-    endTimeEdit: date2,
-    diffTime: diffGetTime(date1, date2),
+    startTime: randomTimeStamp,
+    endTime: new Date(randomTimeStamp).setMinutes(new Date(randomTimeStamp).getMinutes() + Math.floor(Math.random() * 360) + 1),
     price: Math.floor(Math.random() * 2000) + 20,
     offers,
     isFavorite: Boolean(Math.round(Math.random())),
