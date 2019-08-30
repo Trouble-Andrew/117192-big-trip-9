@@ -29,7 +29,7 @@ export class TripController {
 
     for (let i = 1; i < itemArray.length; i++) {
       if (this._currentDay !== new Date(itemArray[i].startTime).getDate()) {
-        this._dayCounter = new Date(itemArray[i].startTime).getDate() - this._currentDay;
+        this._dayCounter += 1;
         itemArray[i].dayCounter = this._dayCounter;
         this._renderTripItem(itemArray[i]);
       } else {
