@@ -51,14 +51,15 @@ const offers = [
 ];
 
 export const getEvent = function () {
-  let randomTimeStamp = +new Date(2019, (new Date(Date.now()).getMonth()), (Math.floor(Math.random() * 30) + new Date(Date.now()).getDate()), (Math.floor(Math.random() * 24)), (Math.floor(Math.random() * 60)), 0);
+  let randomTimeStamp1 = +new Date(2019, (new Date(Date.now()).getMonth()), (Math.floor(Math.random() * 30) + new Date(Date.now()).getDate()), (Math.floor(Math.random() * 24)), (Math.floor(Math.random() * 60)), 0);
+  let randomTimeStamp2 = new Date(randomTimeStamp1).setMinutes(new Date(randomTimeStamp1).getMinutes() + Math.floor(Math.random() * 360) + 1);
   return {
     type: shuffle(Array.from(type))[0],
     location: shuffle(Array.from(location))[0],
     photo: `http://picsum.photos/300/150?r=${Math.random()}`,
     description: shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`),
-    startTime: randomTimeStamp,
-    endTime: new Date(randomTimeStamp).setMinutes(new Date(randomTimeStamp).getMinutes() + Math.floor(Math.random() * 360) + 1),
+    startTime: randomTimeStamp1,
+    endTime: randomTimeStamp2,
     price: Math.floor(Math.random() * 2000) + 20,
     offers,
     isFavorite: Boolean(Math.round(Math.random())),

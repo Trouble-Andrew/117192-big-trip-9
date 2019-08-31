@@ -25,7 +25,7 @@ export const diffGetTime = function (start, end) {
 export const sortArrayOfObjByDate = function (array) {
   let byDate = array.slice(0);
   return byDate.sort(function (a, b) {
-    return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+    return a.startTime - b.startTime;
   });
 };
 

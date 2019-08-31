@@ -81,7 +81,6 @@ export class TripController {
         break;
       case `sort-time`:
         const sortedByDate = this._tripItems.slice().sort((a, b) => (b.endTime - b.startTime) - (a.endTime - a.startTime));
-
         this._renderDays(sortedByDate);
         break;
       case `sort-price`:
