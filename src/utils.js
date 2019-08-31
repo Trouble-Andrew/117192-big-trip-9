@@ -10,20 +10,22 @@ export const shuffle = function (arr) {
   return arr;
 };
 
-export const diffGetTime = function (date1, date2) {
+export const diffGetTime = function (start, end) {
+  let date1 = new Date(start);
+  let date2 = new Date(end);
   let diff = date2.getTime() - date1.getTime();
   let msec = diff;
   let hh = Math.floor(msec / 1000 / 60 / 60);
   msec -= hh * 1000 * 60 * 60;
   let mm = Math.floor(msec / 1000 / 60);
   msec -= mm * 1000 * 60;
-  return `${hh}H:${mm}M`;
+  return `${hh}H:${mm.length === 1 ? mm + `0` : mm}M`;
 };
 
 export const sortArrayOfObjByDate = function (array) {
   let byDate = array.slice(0);
   return byDate.sort(function (a, b) {
-    return a.startTimeEdit.getTime() - b.startTimeEdit.getTime();
+    return a.startTime - b.startTime;
   });
 };
 
@@ -39,12 +41,12 @@ export const fillTripInfo = (array) => {
 
   array.forEach(function (item) {
     tripCities.add(item.location);
-    tripDates.add(item.startTimeEdit.getDate());
+    tripDates.add(new Date(item.startTime).getDate());
     tripCost.push(item.price);
   });
 
   tripCitiesElem.innerHTML = `${Array.from(tripCities).join(`-`)}`;
-  tripDatesElem.innerHTML = `${array[0].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})} - ${array[array.length - 1].startTimeEdit.getDate()} ${array[0].startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})}`;
+  tripDatesElem.innerHTML = `${new Date(array[0].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})} - ${new Date(array[array.length - 1].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})}`;
   tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
 };
 

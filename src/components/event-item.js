@@ -1,5 +1,6 @@
 import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
+import {diffGetTime} from './../utils.js';
 
 export class TripItem extends EventItemComponent {
   constructor(params) {
@@ -13,7 +14,7 @@ export class TripItem extends EventItemComponent {
     return `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">${this._dayCounter !== null ? this._dayCounter : ``}</span>
-          <time class="day__date" datetime="">${this._dayCounter !== null ? `${this._startTimeEdit.toLocaleDateString(`en-GB`, {month: `short`})} ${this._startTimeEdit.getDate()}` : ``}</time>
+          <time class="day__date" datetime="">${this._dayCounter !== null ? `${new Date(this._startTime).toLocaleDateString(`en-GB`, {month: `short`})} ${new Date(this._startTime).getDate()}` : ``}</time>
         </div>
         <ul class="trip-events__list">
           <li class="trip-events__item">
@@ -25,11 +26,11 @@ export class TripItem extends EventItemComponent {
 
               <div class="event__schedule">
                 <p class="event__time">
-                  <time class="event__start-time" datetime="2019-03-18T12:25">${this._startTime}</time>
+                  <time class="event__start-time" datetime="2019-03-18T12:25">${new Date(this._startTime).toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`})}</time>
                   &mdash;
-                  <time class="event__end-time" datetime="2019-03-18T13:35">${this._endTime}</time>
+                  <time class="event__end-time" datetime="2019-03-18T13:35">${new Date(this._endTime).toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`})}</time>
                 </p>
-                <p class="event__duration">${this._diffTime}</p>
+                <p class="event__duration">${diffGetTime(this._startTime, this._endTime)}</p>
               </div>
 
               <p class="event__price">

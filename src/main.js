@@ -1,7 +1,6 @@
 import {getTripInfoTemplate} from './components/trip-info.js';
 import {getTripControlsTemplate} from './components/trip-controls.js';
 import {getTripFiltersTemplate} from './components/trip-filters.js';
-import {getTripSortTemplate} from './components/trip-sort.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent} from './utils.js';
 import {renderComponent} from './render.js';
@@ -18,7 +17,6 @@ export const sortedMockArray = sortArrayOfObjByDate(mockArray);
 renderComponent(getTripInfoTemplate(), tripInfoContainer, 1, `afterbegin`);
 renderComponent(getTripControlsTemplate(), tripControlsContainer, 1, `beforebegin`);
 renderComponent(getTripFiltersTemplate(), tripControlsContainer, 1, `afterend`);
-renderComponent(getTripSortTemplate(), tripEventsContainer);
 renderComponent(getTripDayTemplate(), tripEventsContainer);
 tripDaysContainer = document.querySelector(`.trip-days`);
 fillTripInfo(sortedMockArray);
