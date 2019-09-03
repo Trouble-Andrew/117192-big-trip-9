@@ -20,6 +20,10 @@ export class AbstractComponent {
     }
   }
 
+  addEvent(eventName, callback) {
+    this.getElement().addEventListener(eventName, callback);
+  }
+
   getTemplate() {
     throw Error(`Abstract method not implemented`);
   }

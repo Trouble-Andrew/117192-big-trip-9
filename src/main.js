@@ -6,6 +6,12 @@ import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent} from './utils.js';
 import {renderComponent} from './render.js';
 import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
+import {PointController} from './controllers/point-controller.js';
+// import moment from 'moment';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
+
+import {Day} from './components/day.js';
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const tripControlsContainer = document.querySelector(`.trip-controls h2:nth-child(2)`);
@@ -20,7 +26,11 @@ renderComponent(getTripFiltersTemplate(), tripControlsContainer, 1, `afterend`);
 renderComponent(getTripDayTemplate(), tripEventsContainer);
 tripDaysContainer = document.querySelector(`.trip-days`);
 fillTripInfo(sortedMockArray);
+// console.log(sortedMockArray);
 
-let tripController = new TripController(tripDaysContainer, sortedMockArray);
+let tripController = new TripController(tripEventsContainer);
 tripController.init();
-getAddNewEvent();
+// getAddNewEvent();
+
+let pointController = new PointController(tripDaysContainer, sortedMockArray);
+pointController.init();
