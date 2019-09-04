@@ -1,8 +1,20 @@
 import {EventItemComponent} from './trip-item-component.js';
+import {pretext} from './../utils.js';
 
 export class TripItemEdit extends EventItemComponent {
   constructor(params) {
     super(params);
+    this._changeType();
+  }
+
+  _changeType() {
+    let item = this;
+    let allElems = this.getElement().querySelectorAll(`.event__type-input`);
+    allElems.forEach(function (elem) {
+      elem.addEventListener(`click`, () => {
+        item.getElement().querySelector(`.event__label`).innerHTML = pretext(elem.defaultValue.charAt(0).toUpperCase() + elem.defaultValue.slice(1));
+      });
+    });
   }
 
   getTemplate() {

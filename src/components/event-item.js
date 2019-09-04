@@ -1,6 +1,6 @@
 import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
-import {diffGetTime} from './../utils.js';
+import {diffGetTime, pretext} from './../utils.js';
 
 export class TripItem extends EventItemComponent {
   constructor(params) {
@@ -15,7 +15,7 @@ export class TripItem extends EventItemComponent {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">Check into ${this._location}</h3>
+        <h3 class="event__title">${pretext(this._type.charAt(0).toUpperCase() + this._type.slice(1))} ${this._location}</h3>
 
         <div class="event__schedule">
           <p class="event__time">

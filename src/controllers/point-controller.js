@@ -1,83 +1,31 @@
-import {removeElement, getAddNewEvent, render, unrender, Position} from './../utils.js';
+import {removeElement, getAddNewEvent} from './../utils.js';
 import {TripItem} from './../components/event-item.js';
 import {TripItemEdit} from './../components/trip-edit.js';
-import {Sort} from './../components/sort.js';
-import {Day} from './../components/day.js';
 import flatpickr from 'flatpickr';
 
 export class PointController {
-  constructor(container, data) {
+  constructor(container, data, onDataChange, onChangeView) {
     this._container = container;
     this._data = data;
-    // this._onDataChange = onDataChange;
+    this._onChangeView = onChangeView;
+    this._onDataChange = onDataChange;
     this._tripItem = new TripItem(data);
     this._tripEdit = new TripItemEdit(data);
-    // this._sort = new Sort();
-    this._dayCounter = 1;
-    this._currentDay = new Date(this._data[0].startTime).getDate();
+
+    this.init();
   }
 
   init() {
-    // this._renderDays(this._data);
-    // this._sort.getElement()
-    // .addEventListener(`click`, (evt) => this._sortLinkHandler(evt));
-
+    this._renderTripItem(this._data, this._container);
   }
 
-  // _renderDays(itemArray) {
-  //   let allItems = document.querySelectorAll(`.trip-days__item`);
-  //   unrender(this._sort.getElement());
-  //   allItems.forEach((item) => unrender(item));
-  //   this._dayCounter = 1;
-  //   render(this._container, this._sort.getElement(), Position.AFTERBEGIN);
-  //   itemArray[0].dayCounter = this._dayCounter;
-  //   this._renderTripItem(itemArray[0]);
-  //
-  //   for (let i = 1; i < itemArray.length; i++) {
-  //     if (this._currentDay !== new Date(itemArray[i].startTime).getDate()) {
-  //       this._dayCounter += 1;
-  //       itemArray[i].dayCounter = this._dayCounter;
-  //       this._renderTripItem(itemArray[i]);
-  //     } else {
-  //       this._renderTripItem(itemArray[i]);
-  //     }
-  //   }
-  // }
-
-  _underderContainer() {
-    let containerChilds = this._container.querySelectorAll(`.trip-days__item`);
-    containerChilds.forEach((item) => unrender(item));
-  }
-
-  _renderDays(itemArray) {
-    this._underderContainer();
-
-    const allDates = this._findDates(itemArray);
-    let index = 0;
-    allDates.forEach((item) => {
-      let days = itemArray.filter((obj) => new Date(obj.startTime).getDate() === item);
-      let day = new Day(days[0].startTime, days.length);
-      render(this._container, day.getElement(), Position.BEFOREEND);
-      let tripDaysContainer = day.getElement().querySelectorAll(`.trip-events__item`);
-      Array.from(tripDaysContainer).forEach((dayContainer) => {
-        this._renderTripItem(itemArray[index], dayContainer);
-        index += 1;
-      });
-
-    });
-  }
-
-  _findDates(itemArray) {
-    let allDates = new Set([]);
-    itemArray.forEach(function (item) {
-      allDates.add(new Date(item.startTime).getDate());
-    });
-    return Array.from(allDates);
+  setDefaultView() {
+    if (this._container.contains(this._tripEdit.getElement())) {
+      this._container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
+    }
   }
 
   _renderTripItem(arrayMock, container) {
-    // const tripItem = new TripItem(arrayMock);
-    // const tripEdit = new TripItemEdit(arrayMock);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
@@ -101,11 +49,13 @@ export class PointController {
       .querySelector(`.event__save-btn`)
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
+        const description = this._tripEdit.getElement().querySelector(`.event__destination-description`).innerHTML;
+        const photo = this._tripEdit.getElement().querySelector(`.event__photo`).src;
         const formData = new FormData(this._tripEdit.getElement());
-        // let dateSwitch = this._cardEdit.getElement().querySelector(`.card__date-status`).innerHTML === `yes` ? true : false;
-        // let dateField = dateSwitch === true ? new Date(formData.get(`date`)) : null;
         const entry = {
           type: formData.get(`event-type`),
+          description,
+          photo,
           location: formData.get(`event-destination`),
           price: formData.get(`event-price`),
           startTime: formData.get(`event-start-time`),
@@ -134,16 +84,14 @@ export class PointController {
             },
           ],
         };
-        // this._onDataChange(entry, this._data);
-        this._data[this._data.findIndex((it) => it === arrayMock)] = entry;
-
-        this._renderDays(this._data);
+        this._onDataChange(entry, this._data);
         document.removeEventListener(`keydown`, this._onEscKeyDown);
       });
 
     this._tripItem.getElement()
       .querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, () => {
+        this._onChangeView();
         container.replaceChild(this._tripEdit.getElement(), this._tripItem.getElement());
         document.addEventListener(`keydown`, onEscKeyDown);
       });
@@ -161,9 +109,20 @@ export class PointController {
         removeElement(this._tripEdit.getElement());
         document.removeEventListener(`keydown`, onEscKeyDown);
         this._tripEdit.removeElement();
+        this._tripItem.removeElement();
         getAddNewEvent();
+        this._checkDays();
       });
 
     this._tripItem.renderElement(container);
+  }
+
+  _checkDays() {
+    let allDays = document.querySelectorAll(`.trip-days__item`);
+    Array.from(allDays).forEach((day) => {
+      if (Array.from(day.querySelectorAll(`.event`)).length === 0) {
+        removeElement(day);
+      }
+    });
   }
 }
