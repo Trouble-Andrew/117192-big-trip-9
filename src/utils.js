@@ -46,7 +46,7 @@ export const fillTripInfo = (array) => {
   });
 
   tripCitiesElem.innerHTML = `${Array.from(tripCities).join(`-`)}`;
-  tripDatesElem.innerHTML = `${new Date(array[0].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})} - ${new Date(array[array.length - 1].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})}`;
+  tripDatesElem.innerHTML = `${new Date(array[0].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})} - ${new Date(array[array.length - 1].startTime).getDate()} ${new Date(array[array.length - 1].startTime).toLocaleDateString(`en-GB`, {month: `short`})}`;
   tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
 };
 
@@ -88,4 +88,41 @@ export const getAddNewEvent = () => {
   if (allEvents.length === 0) {
     tripEventsContainer.innerHTML = `<p class="trip-events__msg">Click New Event to create your first point</p>`;
   }
+};
+
+export const pretext = (text) => {
+  let phrase;
+  switch (text) {
+    case `Taxi`:
+      phrase = text + ` to`;
+      break;
+    case `Bus`:
+      phrase = text + ` to`;
+      break;
+    case `Train`:
+      phrase = text + ` at`;
+      break;
+    case `Transport`:
+      phrase = text + ` to`;
+      break;
+    case `Drive`:
+      phrase = text + ` to`;
+      break;
+    case `Flight`:
+      phrase = text + ` to`;
+      break;
+    case `Ship`:
+      phrase = text + ` to`;
+      break;
+    case `Check-in`:
+      phrase = `Check into`;
+      break;
+    case `Sightseeing`:
+      phrase = text + ` in`;
+      break;
+    case `Restaurant`:
+      phrase = text + ` in`;
+      break;
+  }
+  return phrase;
 };
