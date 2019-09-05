@@ -2,6 +2,7 @@ import {render, unrender, Position} from './../utils.js';
 import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {PointController} from './point-controller.js';
+import moment from 'moment';
 
 export class TripController {
   constructor(container, tripItems) {
@@ -21,14 +22,26 @@ export class TripController {
 
   }
 
+  _showDays(prevDate, nextDate) {
+    const start = moment(nextDate);
+    let end = 0;
+    end = prevDate === 0 ? end = moment(nextDate) : end = moment(prevDate);
+    const diff = start.diff(end, `days`) === 0 ? 1 : start.diff(end, `days`);
+    return diff;
+  }
+
   _renderDays(itemArray) {
     this._underderContainer();
     let daysContainer = document.querySelector(`.trip-days`);
     let index = 0;
+    let dayCounter = 1;
+    let previousDate = 0;
     const allDates = this._findDates(this._tripItems);
     allDates.forEach((day) => {
       let days = this._tripItems.filter((obj) => new Date(obj.startTime).getDate() === day);
-      let dayElement = new Day(days[0].startTime, days.length);
+      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
+      dayCounter += this._showDays(previousDate, days[0].startTime);
+      previousDate = days[0].startTime;
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {

@@ -1,6 +1,7 @@
 import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
 import {diffGetTime, pretext} from './../utils.js';
+import moment from 'moment';
 
 export class TripItem extends EventItemComponent {
   constructor(params) {
@@ -19,9 +20,9 @@ export class TripItem extends EventItemComponent {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T12:25">${new Date(this._startTime).toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`})}</time>
+            <time class="event__start-time" datetime="${moment(this._startTime).format(`YYYY-MM-DDTHH:MM`)}">${moment(this._startTime).format(`HH:MM`)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T13:35">${new Date(this._endTime).toLocaleTimeString([], {hour: `2-digit`, minute: `2-digit`})}</time>
+            <time class="event__end-time" datetime="${moment(this._endTime).format(`YYYY-MM-DDTHH:MM`)}">${moment(this._endTime).format(`HH:MM`)}</time>
           </p>
           <p class="event__duration">${diffGetTime(this._startTime, this._endTime)}</p>
         </div>
