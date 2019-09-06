@@ -34,13 +34,14 @@ export class TripController {
     this._underderContainer();
     let daysContainer = document.querySelector(`.trip-days`);
     let index = 0;
-    let dayCounter = 1;
+    let dayCounter = 0;
     let previousDate = 0;
     const allDates = this._findDates(this._tripItems);
     allDates.forEach((day) => {
       let days = this._tripItems.filter((obj) => new Date(obj.startTime).getDate() === day);
-      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       dayCounter += this._showDays(previousDate, days[0].startTime);
+      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
+      previousDate = previousDate === 0 ? days[0].startTime : previousDate;
       previousDate = days[0].startTime;
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);

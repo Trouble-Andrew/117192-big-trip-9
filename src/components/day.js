@@ -9,7 +9,7 @@ export class Day extends AbstractComponent {
     this._dayCounter = dayCounter;
   }
 
-  getDays() {
+  _getDays() {
     let markup = ``;
     for (let i = 0; i < this._itemsCount; i++) {
       markup += `<li class="trip-events__item"></li>`;
@@ -24,7 +24,7 @@ export class Day extends AbstractComponent {
           <time class="day__date" datetime="${moment(this._startTime).format(`YYYY-MM-DD`)}">${moment(this._startTime).format(`D MMM`)}</time>
         </div>
         <ul class="trip-events__list">
-          ${this.getDays()}
+          ${this._getDays()}
         </ul>
       </li>`;
   }
