@@ -1,13 +1,15 @@
 import {AbstractComponent} from './abstract-component.js';
+import moment from 'moment';
 
 export class Day extends AbstractComponent {
-  constructor(dueDate, itemsCount) {
+  constructor(dueDate, itemsCount, dayCounter) {
     super(dueDate, itemsCount);
     this._startTime = dueDate;
     this._itemsCount = itemsCount;
+    this._dayCounter = dayCounter;
   }
 
-  getDays() {
+  _getDays() {
     let markup = ``;
     for (let i = 0; i < this._itemsCount; i++) {
       markup += `<li class="trip-events__item"></li>`;
@@ -18,11 +20,11 @@ export class Day extends AbstractComponent {
   getTemplate() {
     return `<li class="trip-days__item  day">
         <div class="day__info">
-          <span class="day__counter">1</span>
-          <time class="day__date" datetime="2019-03-18">${new Date(this._startTime).toLocaleDateString(`en-GB`, {month: `short`})} ${new Date(this._startTime).getDate()}</time>
+          <span class="day__counter">${this._dayCounter}</span>
+          <time class="day__date" datetime="${moment(this._startTime).format(`YYYY-MM-DD`)}">${moment(this._startTime).format(`D MMM`)}</time>
         </div>
         <ul class="trip-events__list">
-          ${this.getDays()}
+          ${this._getDays()}
         </ul>
       </li>`;
   }

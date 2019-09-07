@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const shuffle = function (arr) {
   let j;
   let temp;
@@ -46,7 +48,7 @@ export const fillTripInfo = (array) => {
   });
 
   tripCitiesElem.innerHTML = `${Array.from(tripCities).join(`-`)}`;
-  tripDatesElem.innerHTML = `${new Date(array[0].startTime).getDate()} ${new Date(array[0].startTime).toLocaleDateString(`en-GB`, {month: `short`})} - ${new Date(array[array.length - 1].startTime).getDate()} ${new Date(array[array.length - 1].startTime).toLocaleDateString(`en-GB`, {month: `short`})}`;
+  tripDatesElem.innerHTML = `${moment(array[0].startTime).format(`D MMM`)} - ${moment(array[array.length - 1].startTime).format(`D MMM`)}`;
   tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
 };
 
