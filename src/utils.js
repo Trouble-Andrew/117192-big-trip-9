@@ -75,6 +75,9 @@ export const render = (container, element, place) => {
     case Position.BEFOREEND:
       container.append(element);
       break;
+    case Position.BEFORE:
+      container.before(element);
+      break;
   }
 };
 

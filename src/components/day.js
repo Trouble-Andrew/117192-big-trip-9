@@ -20,8 +20,8 @@ export class Day extends AbstractComponent {
   getTemplate() {
     return `<li class="trip-days__item  day">
         <div class="day__info">
-          <span class="day__counter">${this._dayCounter}</span>
-          <time class="day__date" datetime="${moment(this._startTime).format(`YYYY-MM-DD`)}">${moment(this._startTime).format(`D MMM`)}</time>
+          <span class="day__counter">${this._dayCounter !== 0 ? this._dayCounter : ``}</span>
+          <time class="day__date" datetime="${moment(this._startTime).format(`YYYY-MM-DD`)}">${this._dayCounter !== 0 ? moment(this._startTime).format(`D MMM`) : ``}</time>
         </div>
         <ul class="trip-events__list">
           ${this._getDays()}
