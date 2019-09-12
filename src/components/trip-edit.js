@@ -3,8 +3,9 @@ import {description} from './../data.js';
 import {pretext, shuffle} from './../utils.js';
 
 export class TripItemEdit extends EventItemComponent {
-  constructor(params) {
+  constructor(params, mode) {
     super(params);
+    this._mode = mode;
     this._changeType();
     this._changeDescription();
   }
@@ -131,7 +132,7 @@ export class TripItemEdit extends EventItemComponent {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">${this._mode === `default` ? `Delete` : `Cancel`}</button>
 
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${this._isFavorite ? `checked` : ``}>
           <label class="event__favorite-btn" for="event-favorite-1">
@@ -141,9 +142,9 @@ export class TripItemEdit extends EventItemComponent {
             </svg>
           </label>
 
-          <button class="event__rollup-btn" type="button">
+          ${this._mode === `default` ? `<button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
-          </button>
+          </button>` : ``}
         </header>
 
         <section class="event__details">
