@@ -2,59 +2,52 @@ import {render, unrender, Position, sortArrayOfObjByDate} from './../utils.js';
 import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {Mode as PointControllerMode, PointController} from './point-controller.js';
+import {StatisticController} from './statistics-controller.js';
+import {DaysController} from './days-controller.js';
 import moment from 'moment';
 
 export class TripController {
-  constructor(container, tripItems) {
-    this._tripItems = tripItems;
+  constructor(container, onDataChange) {
+    // this._tripItems = tripItems;
+    this._points = [];
     this._container = container;
     this._sort = new Sort();
-    this._onChangeView = this._onChangeView.bind(this);
-    this._onDataChange = this._onDataChange.bind(this);
-    this._subscriptions = [];
-    this._creatingPoint = null;
+    this._onDataChangeMain = onDataChange;
+    this._statisticController = null;
+
+    this._daysController = new DaysController(this._container, this._onDataChange.bind(this));
+
+    this._init();
   }
 
-  init() {
+  _init() {
+    // this._statisticController = new StatisticController(this._container, this._tripItems);
+    // console.log(this._statisticController);
     render(this._container, this._sort.getElement(), Position.AFTERBEGIN);
-    this._renderDays(sortArrayOfObjByDate(this._tripItems));
+
+    // this._renderDays(sortArrayOfObjByDate(this._tripItems));
+    // this._renderDays(sortArrayOfObjByDate(this._tripItems));
+
     this._sort.getElement()
 			.addEventListener(`click`, (evt) => this._sortLinkHandler(evt));
 
   }
 
-  _showDays(prevDate, nextDate) {
-    const start = moment(nextDate);
-    let end = 0;
-    end = prevDate === 0 ? end = moment(nextDate) : end = moment(prevDate);
-    const diff = start.diff(end, `days`) === 0 ? 1 : start.diff(end, `days`);
-    return diff;
+  _renderTrip() {
+    this._daysController.setPoints(this._points);
   }
 
-  _renderDays(itemArray) {
+  show(points) {
+    if (points !== this._points) {
+      this._setPoints(points);
+    }
 
-    this._underderContainer();
-    itemArray = sortArrayOfObjByDate(itemArray);
-    let daysContainer = document.querySelector(`.trip-days`);
-    let index = 0;
-    let dayCounter = 0;
-    let previousDate = 0;
-    const allDates = this._findDates(itemArray);
+    this._container.classList.remove(`visually-hidden`);
+  }
 
-    allDates.forEach((day) => {
-      let days = itemArray.filter((obj) => new Date(obj.startTime).getDate() === day);
-      dayCounter += this._showDays(previousDate, days[0].startTime);
-      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
-      previousDate = previousDate === 0 ? days[0].startTime : previousDate;
-      previousDate = days[0].startTime;
-      render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
-      let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
-      Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView);
-        index += 1;
-        this._subscriptions.push(pointController.setDefaultView.bind(pointController));
-      });
-    });
+  _setPoints(points) {
+    this._points = points;
+    this._renderTrip();
   }
 
   _renderForSort(itemArray) {
@@ -111,27 +104,36 @@ export class TripController {
     this._subscriptions.forEach((it) => it());
   }
 
-  _onDataChange(newData, oldData) {
-    const index = this._tripItems.findIndex((item) => item === oldData);
-    if (newData === null) {
-      this._tripItems = [...this._tripItems.slice(0, index), ...this._tripItems.slice(index + 1)];
-    } else if (oldData === null) {
-      this._creatingPoint = null;
-      this._tripItems = [newData, ...this._tripItems];
-    } else {
-      this._tripItems[index] = newData;
-    }
+  // _onDataChange(newData, oldData) {
+  //   const index = this._tripItems.findIndex((item) => item === oldData);
+  //   if (newData === null) {
+  //     this._tripItems = [...this._tripItems.slice(0, index), ...this._tripItems.slice(index + 1)];
+  //   } else if (oldData === null) {
+  //     this._creatingPoint = null;
+  //     this._tripItems = [newData, ...this._tripItems];
+  //   } else {
+  //     this._tripItems[index] = newData;
+  //   }
+  //   unrender();
+  //   // this._statisticController = new StatisticController(this._container, this._tripItems);
+  //   console.log(this._statisticController);
+  //
+  //   this._renderDays(this._tripItems);
+  // }
 
-    this._renderDays(this._tripItems);
+  _onDataChange(points) {
+    this._onDataChangeMain(this._points);
+    console.log(this._points);
+    this._renderDays(points);
   }
 
   hide() {
     this._container.classList.add(`visually-hidden`);
   }
 
-  show() {
-    this._container.classList.remove(`visually-hidden`);
-  }
+  // show() {
+  //   this._container.classList.remove(`visually-hidden`);
+  // }
 
   createPoint() {
     if (this._creatingPoint) {

@@ -7,6 +7,7 @@ import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent, render, Position} fr
 import {renderComponent} from './render.js';
 import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
+// import {StatisticController} from './controllers/statistics-controller.js';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
@@ -18,7 +19,12 @@ const tripEventsContainer = document.querySelector(`.trip-events`);
 const tripControls = new TripControls();
 const statistics = new Statistics();
 
-export const sortedMockArray = sortArrayOfObjByDate(mockArray);
+export let sortedMockArray = sortArrayOfObjByDate(mockArray);
+
+const onDataChange = (points) => {
+  console.log(points);
+  sortedMockArray = points;
+};
 
 statistics.getElement().classList.add(`visually-hidden`);
 render(pageContainer, statistics.getElement(), Position.AFTERBEGIN);
@@ -31,9 +37,13 @@ renderComponent(getTripFiltersTemplate(), tripControlsContainer, 1, `afterend`);
 renderComponent(getTripDayTemplate(), tripEventsContainer);
 fillTripInfo(sortedMockArray);
 
-let tripController = new TripController(tripEventsContainer, sortedMockArray);
-tripController.init();
+// let tripController = new TripController(tripEventsContainer, sortedMockArray);
+// tripController.init();
+let tripController = new TripController(tripEventsContainer, onDataChange);
+tripController.show(sortedMockArray);
 getAddNewEvent();
+
+// let statisticController = new StatisticController(statistics.getElement(), sortedMockArray);
 
 tripControls.getElement().addEventListener(`click`, (evt) => {
   const table = tripControls.getElement().querySelector(`.trip-tabs__btn`);
@@ -43,7 +53,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
   switch (evt.target.innerHTML) {
     case `Table`:
       statistics.getElement().classList.add(`visually-hidden`);
-      tripController.show();
+      tripController.show(sortedMockArray);
       evt.target.classList.add(`trip-tabs__btn--active`);
       stats.classList.remove(`trip-tabs__btn--active`);
       table.classList.add(`trip-tabs__btn--active`);
@@ -60,5 +70,8 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 
 newPointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
+
   tripController.createPoint();
+
+  tripController.show(sortedMockArray);
 });
