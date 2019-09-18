@@ -43,10 +43,6 @@ export class PointController {
     }
 
     const onEscKeyDown = (evt) => {
-      // if (evt.key === `Escape` || evt.key === `Esc`) {
-      //   container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
-      //   document.removeEventListener(`keydown`, onEscKeyDown);
-      // }
       if (evt.key === `Escape` || evt.key === `Esc`) {
         if (mode === Mode.DEFAULT) {
           if (container.contains(this._tripEdit.getElement())) {
@@ -84,7 +80,7 @@ export class PointController {
           description,
           photo,
           location: formData.get(`event-destination`),
-          price: formData.get(`event-price`),
+          price: Number.isInteger(Number.parseInt(formData.get(`event-price`), 0)) === true ? Number.parseInt(formData.get(`event-price`), 0) : 0,
           startTime: Number.parseInt((moment(new Date(formData.get(`event-start-time`))).unix() + `000`), 0),
           endTime: Number.parseInt((moment(new Date(formData.get(`event-end-time`))).unix() + `000`), 0),
           isFavorite: formData.get(`event-favorite`) === `on` ? true : false,
@@ -137,17 +133,6 @@ export class PointController {
           this._onDataChange(null, this._data);
         });
     }
-
-    // this._tripEdit.getElement()
-    //   .querySelector(`.event__reset-btn`)
-    //   .addEventListener(`click`, () => {
-    //     removeElement(this._tripEdit.getElement());
-    //     document.removeEventListener(`keydown`, onEscKeyDown);
-    //     this._tripEdit.removeElement();
-    //     this._tripItem.removeElement();
-    //     getAddNewEvent();
-    //     this._checkDays();
-    //   });
 
     if (this._mode === `adding`) {
       this._tripEdit.getElement()

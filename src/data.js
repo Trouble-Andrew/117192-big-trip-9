@@ -13,7 +13,6 @@ const type = new Set([
   `taxi`,
   `train`,
   `transport`,
-  `trip`,
 ]);
 const location = new Set([
   `Geneva`,

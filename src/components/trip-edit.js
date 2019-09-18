@@ -8,6 +8,32 @@ export class TripItemEdit extends EventItemComponent {
     this._mode = mode;
     this._changeType();
     this._changeDescription();
+    this._offersPriceAdder = this._offersPriceAdder.bind(this);
+
+    this._bind();
+  }
+
+  _bind() {
+    this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
+  }
+
+  _offersPriceAdder() {
+    // const formData = new FormData(this.getElement());
+    // event__available-offers
+    // console.log(formData.get(`event__offer-checkbox`));
+    // let counter = 0;
+    // let checkedOffers = _.filter(this._offers, [`isChecked`, true]);
+    // checkedOffers.forEach((i) => counter + i.price);
+
+    // console.log((_.filter(this._offers, [`isChecked`, true]).reduce((accumulator, i) => accumulator + i.price), 0));
+
+    // checkedOffers.forEach(function (item) {
+    //   counter += item.price;
+    // });
+    // console.log(counter);
+    // console.log(this.getElement().querySelector(`#event-price-1`).value);
+    // this.getElement().querySelector(`#event-price-1`).value = 999;
+    // this._price = 999;
   }
 
   _changeType() {
