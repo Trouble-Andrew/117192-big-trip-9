@@ -1,9 +1,7 @@
 import {Statistics} from './../components/statistics.js';
 import {TYPES_MAP} from './../components/types-map.js';
-import {render, unrender, Position} from './../utils.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-// import flatpickr from 'flatpickr';
 import moment from 'moment';
 
 const BAR_HEIGHT = 55;
@@ -21,9 +19,6 @@ export class StatisticController {
     const moneyCtx = document.querySelector(`.statistics__chart--money`);
     const transportCtx = document.querySelector(`.statistics__chart--transport`);
     const timeCtx = document.querySelector(`.statistics__chart--time`);
-    // unrender(this._statistics.getElement());
-    // this._statistics = new Statistics();
-    // render(this._container, this._statistics.getElement(), Position.BEFOREEND);
 
     this._drawChart(moneyCtx, this._getMoneySummary(), `MONEY`, (val) => `€ ${val}`);
     this._drawChart(transportCtx, this._getUseOfTransport(), `TRANSPORT`, (val) => `${val}x`);

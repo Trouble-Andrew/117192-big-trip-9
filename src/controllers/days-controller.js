@@ -17,7 +17,7 @@ export class DaysController {
   setPoints(points) {
     this._points = points;
     this._subscriptions = [];
-    this._container.innerHTML = ``;
+    // this._container.innerHTML = ``;
     this._renderDays(sortArrayOfObjByDate(points));
   }
 
@@ -34,7 +34,6 @@ export class DaysController {
     this._underderContainer();
     itemArray = sortArrayOfObjByDate(itemArray);
     let daysContainer = document.querySelector(`.trip-days`);
-    console.log(daysContainer);
     let index = 0;
     let dayCounter = 0;
     let previousDate = 0;
@@ -105,7 +104,7 @@ export class DaysController {
       this._points[index] = newData;
     }
 
-    this.setTasks(this._points);
+    this.setPoints(this._points);
 
     this._onDataChangeMain(this._points);
   }
@@ -151,5 +150,8 @@ export class DaysController {
       this._creatingTask = null;
       this._onDataChange(...args);
     }, this._onChangeView);
+    if (this._container.querySelector(`.event--edit`) === null) {
+      this._creatingTask = null;
+    }
   }
 }
