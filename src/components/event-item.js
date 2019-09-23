@@ -4,10 +4,10 @@ import {diffGetTime, pretext} from './../utils.js';
 import moment from 'moment';
 
 export class TripItem extends EventItemComponent {
-  constructor(params) {
+  constructor(params, types, destinations) {
     super(params);
     this._allObj = params;
-    this._tripEdit = new TripItemEdit(this._allObj);
+    // this._tripEdit = new TripItemEdit(this._allObj, types, destinations);
     this._tripItemContainer = document.querySelector(`.trip-days`);
   }
 
@@ -34,7 +34,7 @@ export class TripItem extends EventItemComponent {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
 
-         ${this._offers.filter((offer) => offer.isChecked).map((offer) => `<li class="event__offer">
+         ${this._offers.filter((offer) => offer.accepted).map((offer) => `<li class="event__offer">
            <span class="event__offer-title">${offer.title}</span>
              &plus;
              &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>

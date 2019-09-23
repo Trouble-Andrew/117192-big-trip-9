@@ -1,19 +1,28 @@
 import {EventItemComponent} from './trip-item-component.js';
-import {description} from './../data.js';
 import {pretext, shuffle} from './../utils.js';
+import moment from 'moment';
 
 export class TripItemEdit extends EventItemComponent {
-  constructor(params, mode) {
+  constructor(params, mode, tripTypes, cities, id) {
     super(params);
     this._mode = mode;
+    this._params = params;
+    this._id = id;
+    this._cities = cities;
+    this._tripTypes = tripTypes;
     this._changeType();
-    this._changeDescription();
+    // this._changeDescription();
     this._offersPriceAdder = this._offersPriceAdder.bind(this);
 
+
+    this._changeOptionsByType();
+    this._changeDescByCity();
     this._bind();
   }
 
   _bind() {
+    // console.log(this._cities);
+    // console.log(this._tripTypes);
     this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
   }
 
@@ -22,10 +31,10 @@ export class TripItemEdit extends EventItemComponent {
     // event__available-offers
     // console.log(formData.get(`event__offer-checkbox`));
     // let counter = 0;
-    // let checkedOffers = _.filter(this._offers, [`isChecked`, true]);
+    // let checkedOffers = _.filter(this._offers, [`accepted`, true]);
     // checkedOffers.forEach((i) => counter + i.price);
 
-    // console.log((_.filter(this._offers, [`isChecked`, true]).reduce((accumulator, i) => accumulator + i.price), 0));
+    // console.log((_.filter(this._offers, [`accepted`, true]).reduce((accumulator, i) => accumulator + i.price), 0));
 
     // checkedOffers.forEach(function (item) {
     //   counter += item.price;
@@ -46,16 +55,77 @@ export class TripItemEdit extends EventItemComponent {
     });
   }
 
-  _changeDescription() {
-    let descriptionField = this.getElement().querySelector(`.event__destination-description`);
-    let destinationField = this.getElement().querySelector(`.event__input--destination`);
-    destinationField.addEventListener(`change`, () => {
-      descriptionField.innerHTML = shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`);
-    });
+  // _changeDescription() {
+  //   let descriptionField = this.getElement().querySelector(`.event__destination-description`);
+  //   let destinationField = this.getElement().querySelector(`.event__input--destination`);
+  //   destinationField.addEventListener(`change`, () => {
+  //     descriptionField.innerHTML = shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`);
+  //   });
+  // }
+
+  _getOfferId(title) {
+    return `${title.split(` `).join(`-`).toLowerCase()}`;
+  }
+
+  _changeOptionsByType() {
+    this.getElement()
+      .querySelectorAll(`.event__type-input`)
+      .forEach((typeItem) => {
+        typeItem.addEventListener(`click`, (evt) => {
+          const target = evt.currentTarget;
+          const typeData = this._tripTypes.find(({type}) => type === target.value);
+
+          this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${typeData.type}.png`;
+          // this.getElement().querySelector(`.event__type-output`).textContent = `${makeFirstSymUp(typeData.type)} ${TRANSPORT_TYPES.has(typeData.type) ? `to` : `in`}`;
+          this.getElement().querySelector(`.event__type-toggle`).checked = false;
+
+          this.getElement().querySelector(`.event__available-offers`).innerHTML = ``;
+
+          if (typeData.offers.length === 0) {
+            this.getElement().querySelector(`.event__section--offers`).classList.add(`visually-hidden`);
+            return;
+          } else {
+            this.getElement().querySelector(`.event__section--offers`).classList.remove(`visually-hidden`);
+          }
+
+          this.getElement().querySelector(`.event__available-offers`).insertAdjacentHTML(`beforeend`,
+              `${typeData.offers.map(({name, price}) => `<div class="event__offer-selector">
+                <input class="event__offer-checkbox  visually-hidden" id="${this._getOfferId(name)}-1" type="checkbox" name="${this._getOfferId(name)}">
+                <label class="event__offer-label" for="${this._getOfferId(name)}-1">
+                  <span class="event__offer-title">${name}</span>
+                  &plus;
+                  &euro;&nbsp;<span class="event__offer-price">${price}</span>
+                </label>
+              </div>`).join(``)}`);
+        });
+      });
+  }
+
+  _changeDescByCity() {
+    this.getElement()
+      .querySelector(`.event__input--destination`)
+      .addEventListener(`change`, (evt) => {
+        const target = evt.currentTarget;
+        const destinationImages = this.getElement().querySelector(`.event__photos-tape`);
+        const destinationDescription = this.getElement().querySelector(`.event__destination-description`);
+        const destinationContainer = this.getElement().querySelector(`.event__section--destination`);
+        const cityData = this._cities.find(({name}) => name === target.value);
+
+        destinationImages.innerHTML = ``;
+
+        if (cityData) {
+          destinationDescription.textContent = cityData.description;
+          destinationContainer.classList.remove(`visually-hidden`);
+          destinationImages.insertAdjacentHTML(`beforeend`, cityData.pictures.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join(``));
+        } else {
+          destinationDescription.textContent = ``;
+          destinationContainer.classList.add(`visually-hidden`);
+        }
+      });
   }
 
   getTemplate() {
-    return `<form class="trip-events__item  event  event--edit" action="#" method="post">
+    return `<form class="trip-events__item  event  event--edit" id="${this._params.id}" action="#" method="post">
         <header class="event__header">
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -131,9 +201,7 @@ export class TripItemEdit extends EventItemComponent {
             </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._location}" list="destination-list-1">
             <datalist id="destination-list-1">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
+              ${this._cities.map(({name}) => `<option value="${name}"></option>`).join(``)}
             </datalist>
           </div>
 
@@ -141,7 +209,7 @@ export class TripItemEdit extends EventItemComponent {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${new Date(this._startTime).toLocaleString(`en-GB`)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${moment(this._startTime).format(`DD/MM/YY`)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
@@ -175,55 +243,29 @@ export class TripItemEdit extends EventItemComponent {
 
         <section class="event__details">
 
-          <section class="event__section  event__section--offers">
+          <section class="event__section  event__section--offers ${this._offers.length > 0 ? `` : `visually-hidden`}">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${this._offers[0].isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-luggage-1">
-                  <span class="event__offer-title">${this._offers[0].title}</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${this._offers[0].price}</span>
-                </label>
-              </div>
 
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${this._offers[1].isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-comfort-1">
-                  <span class="event__offer-title">${this._offers[1].title}</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${this._offers[1].price}</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal" ${this._offers[2].isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-meal-1">
-                  <span class="event__offer-title">${this._offers[2].title}</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${this._offers[2].price}</span>
-                </label>
-              </div>
-
-              <div class="event__offer-selector">
-                <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats" ${this._offers[3].isChecked ? `checked` : ``}>
-                <label class="event__offer-label" for="event-offer-seats-1">
-                  <span class="event__offer-title">${this._offers[3].title}</span>
-                  &plus;
-                  &euro;&nbsp;<span class="event__offer-price">${this._offers[3].price}</span>
-                </label>
-              </div>
+            ${this._offers.map(({title, price, accepted}) => `<div class="event__offer-selector">
+              <input class="event__offer-checkbox  visually-hidden" id="${this._getOfferId(title)}-1" type="checkbox" name="${this._getOfferId(title)}" ${accepted ? `checked` : ``}>
+              <label class="event__offer-label" for="${this._getOfferId(title)}-1">
+                <span class="event__offer-title">${title}</span>
+                &plus;
+                &euro;&nbsp;<span class="event__offer-price">${price}</span>
+              </label>
+            </div>`).join(``)}
             </div>
           </section>
 
-          <section class="event__section  event__section--destination">
+          <section class="event__section  event__section--destination ${this._description.length > 0 ? `` : `visually-hidden`}">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${this._description}</p>
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                <img class="event__photo" src="${this._photo}" alt="Event photo">
+                ${this._photo.filter((photo) => photo).map((photo) => `<img class="event__photo" src="${photo.src}" alt=${photo.description}>`).join(``)}
               </div>
             </div>
           </section>

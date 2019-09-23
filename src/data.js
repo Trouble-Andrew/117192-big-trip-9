@@ -30,22 +30,22 @@ const offers = [
   {
     title: `Add luggage`,
     price: Math.floor(Math.random() * 50) + 5,
-    isChecked: Boolean(Math.round(Math.random())),
+    accepted: Boolean(Math.round(Math.random())),
   },
   {
     title: `Switch to comfort class`,
     price: Math.floor(Math.random() * 200) + 50,
-    isChecked: Boolean(Math.round(Math.random())),
+    accepted: Boolean(Math.round(Math.random())),
   },
   {
     title: `Add meal`,
     price: Math.floor(Math.random() * 10) + 1,
-    isChecked: Boolean(Math.round(Math.random())),
+    accepted: Boolean(Math.round(Math.random())),
   },
   {
     title: `Choose seats`,
     price: Math.floor(Math.random() * 50) + 1,
-    isChecked: Boolean(Math.round(Math.random())),
+    accepted: Boolean(Math.round(Math.random())),
   },
 ];
 

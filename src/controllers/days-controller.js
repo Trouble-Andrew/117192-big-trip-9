@@ -4,9 +4,11 @@ import {Mode as PointControllerMode, PointController} from './point-controller.j
 import moment from 'moment';
 
 export class DaysController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, types, destinations) {
     this._points = [];
     this._container = container;
+    this._tripTypes = types;
+    this._destinations = destinations;
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onDataChangeMain = onDataChange;
@@ -17,7 +19,6 @@ export class DaysController {
   setPoints(points) {
     this._points = points;
     this._subscriptions = [];
-    // this._container.innerHTML = ``;
     this._renderDays(sortArrayOfObjByDate(points));
   }
 
@@ -48,7 +49,7 @@ export class DaysController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView);
+        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._tripTypes, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -69,7 +70,7 @@ export class DaysController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView);
+        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._tripTypes, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -126,22 +127,22 @@ export class DaysController {
         {
           title: `Add luggage`,
           price: Math.floor(Math.random() * 50) + 5,
-          isChecked: false,
+          accepted: false,
         },
         {
           title: `Switch to comfort class`,
           price: Math.floor(Math.random() * 200) + 50,
-          isChecked: false,
+          accepted: false,
         },
         {
           title: `Add meal`,
           price: Math.floor(Math.random() * 10) + 1,
-          isChecked: false,
+          accepted: false,
         },
         {
           title: `Choose seats`,
           price: Math.floor(Math.random() * 50) + 1,
-          isChecked: false,
+          accepted: false,
         },
       ],
       isFavorite: false,
@@ -149,7 +150,7 @@ export class DaysController {
     this._creatingPoint = new PointController(this._container.querySelector(`.trip-days`), defaultPoint, PointControllerMode.ADDING, (...args) => {
       this._creatingTask = null;
       this._onDataChange(...args);
-    }, this._onChangeView);
+    }, this._onChangeView, this._tripTypes, this._destinations);
     if (this._container.querySelector(`.event--edit`) === null) {
       this._creatingTask = null;
     }

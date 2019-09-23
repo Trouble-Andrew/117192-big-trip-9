@@ -3,11 +3,13 @@ import {TripControls} from './components/trip-controls.js';
 import {TripFilters} from './components/trip-filters.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {Statistics} from './components/statistics.js';
+import LoadingMessage from "./components/loading-message.js";
 import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent, render, unrender, Position} from './utils.js';
 import {renderComponent} from './render.js';
-import {mockArray} from './data.js';
+// import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
 import {StatisticController} from './controllers/statistics-controller.js';
+import API from "./api.js";
 import * as _ from 'lodash';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
@@ -19,30 +21,125 @@ const tripControlsContainer = document.querySelector(`.trip-controls h2:nth-chil
 const tripEventsContainer = document.querySelector(`.trip-events`);
 const tripFilters = new TripFilters();
 const tripControls = new TripControls();
+const loadingMessage = new LoadingMessage();
 let statistics = new Statistics();
 
-let sortedMockArray = sortArrayOfObjByDate(mockArray);
+let tripController = null;
+// let tripsData = sortArrayOfObjByDate(mockArray);
 
-const onDataChange = (points) => {
-  sortedMockArray = points;
-  fillTripInfo(sortedMockArray);
+const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
+const api = new API(END_POINT, AUTHORIZATION);
+
+// const onDataChange = (points) => {
+//   tripsData = points;
+//   fillTripInfo(tripsData);
+// };
+
+const onDataChange = (actionType, update, onError) => {
+  if (actionType === null || update === null) {
+    tripController.renderTrip();
+    return;
+  }
+
+  switch (actionType) {
+    case `update`:
+      api.updatePoint({
+        id: update.id,
+        point: update.toRAW()
+      })
+        .then(() => api.getPoints())
+        .then((points) => {
+          tripsData = points;
+          tripController.show(points);
+          // pageDataController.updatePage(points);
+        })
+        .catch(() => {
+          onError();
+        });
+      break;
+    case `delete`:
+      api.deletePoint({
+        id: update.id
+      })
+        .then(() => api.getPoints())
+        .then((points) => {
+          tripsData = points;
+          console.log(tripsData);
+          tripController.show(points);
+          // pageDataController.updatePage(points);
+        })
+        .catch(() => {
+          onError();
+        });
+      break;
+    case `create`:
+      api.createPoint({
+        point: update.toRAW()
+      })
+        .then(() => api.getPoints())
+        .then((points) => {
+          tripsData = points;
+          tripController.show(points);
+          // pageDataController.updatePage(points);
+        })
+        .catch(() => {
+          onError();
+        });
+      break;
+    default:
+      throw new Error(`Wrong action type`);
+  }
 };
+
+let tripsData = null;
+// let tripInfoData = null;
+let tripTypesWithOptions = null;
+let citiesWithDescription = null;
+
+api.getData({url: `offers`})
+  .then((offers) => {
+    tripTypesWithOptions = offers;
+  })
+  .then(() => api.getData({url: `destinations`}))
+  .then((destinations) => {
+    citiesWithDescription = destinations;
+  })
+  .then(() => api.getPoints())
+  .then((points) => {
+    tripsData = points;
+    // tripInfoData = getTripInfoData(points.slice().sort((a, b) => a - b));
+    fillTripInfo(tripsData);
+  })
+  .then(() => {
+    // tripInfo.setTripInfoData(tripInfoData);
+    tripController = new TripController(tripEventsContainer, tripsData, onDataChange, tripTypesWithOptions, citiesWithDescription);
+  })
+  .then(() => {
+    unrender(loadingMessage.getElement());
+    loadingMessage.removeElement();
+    tripController.init();
+    // fullTripPriceElem.textContent = getFullEventPrice(tripsData);
+    // document.querySelector(`.trip-info__main`).replaceWith(tripInfo.getElement());
+  });
 
 statistics.getElement().classList.add(`visually-hidden`);
 render(pageContainer, statistics.getElement(), Position.AFTERBEGIN);
+render(pageContainer, loadingMessage.getElement(), `beforeend`);
 renderComponent(getTripInfoTemplate(), tripInfoContainer, 1, `afterbegin`);
 
 
 render(tripControlsContainer, tripControls.getElement(), Position.BEFORE);
 render(tripControlsContainer, tripFilters.getElement(), Position.BEFORE);
 renderComponent(getTripDayTemplate(), tripEventsContainer);
-fillTripInfo(sortedMockArray);
+// fillTripInfo(tripsData);
 
-let tripController = new TripController(tripEventsContainer, onDataChange);
-let statisticController = new StatisticController(statistics.getElement(), sortedMockArray);
-statisticController.hide();
-tripController.show(sortedMockArray);
-getAddNewEvent();
+// let tripController = new TripController(tripEventsContainer, onDataChange);
+// let statisticController = new StatisticController(statistics.getElement(), tripsData);
+// statisticController.hide();
+// let statisticController;
+// tripController.show(tripsData);
+// getAddNewEvent();
 
 
 tripControls.getElement().addEventListener(`click`, (evt) => {
@@ -53,7 +150,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
   switch (evt.target.innerHTML) {
     case `Table`:
       statistics.getElement().classList.add(`visually-hidden`);
-      tripController.show(sortedMockArray);
+      tripController.show(tripsData);
 
       evt.target.classList.add(`trip-tabs__btn--active`);
       stats.classList.remove(`trip-tabs__btn--active`);
@@ -65,11 +162,10 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
       statistics = null;
       statistics = new Statistics();
       render(pageContainer, statistics.getElement(), Position.AFTERBEGIN);
-      statisticController = new StatisticController(statistics.getElement(), sortedMockArray);
-
       evt.target.classList.add(`trip-tabs__btn--active`);
       table.classList.remove(`trip-tabs__btn--active`);
       stats.classList.add(`trip-tabs__btn--active`);
+      statisticController = new StatisticController(statistics.getElement(), tripsData);
       break;
   }
 });
@@ -77,7 +173,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 newPointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   tripController.createPoint();
-  tripController.show(sortedMockArray);
+  tripController.show(tripsData);
 });
 
 tripFilters.getElement().addEventListener(`change`, (evt) => {
@@ -93,13 +189,13 @@ tripFilters.getElement().addEventListener(`change`, (evt) => {
 
   switch (evt.target.id) {
     case filterAll:
-      tripController.show(sortedMockArray);
+      tripController.show(tripsData);
       break;
     case filterFuture:
-      tripController.show(_.filter(sortedMockArray, (point) => point.startTime > Date.now()));
+      tripController.show(_.filter(tripsData, (point) => point.startTime > Date.now()));
       break;
     case filterPast:
-      tripController.show(_.filter(sortedMockArray, (point) => point.startTime < Date.now()));
+      tripController.show(_.filter(tripsData, (point) => point.startTime < Date.now()));
       break;
   }
 });

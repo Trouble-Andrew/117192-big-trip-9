@@ -95,6 +95,8 @@ export const getAddNewEvent = () => {
   }
 };
 
+export const TRANSPORT_TYPES = new Set([`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`]);
+
 export const pretext = (text) => {
   let phrase;
   switch (text) {

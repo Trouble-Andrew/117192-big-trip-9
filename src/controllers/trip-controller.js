@@ -1,37 +1,48 @@
-import {render, unrender, Position} from './../utils.js';
+import {render, unrender, Position, sortArrayOfObjByDate, getAddNewEvent} from './../utils.js';
 import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {Mode as PointControllerMode, PointController} from './point-controller.js';
 import {DaysController} from './days-controller.js';
 
 export class TripController {
-  constructor(container, onDataChange) {
-    this._points = [];
+  constructor(container, points, onDataChange, types, destinations) {
+    this._points = sortArrayOfObjByDate(points);
+    this._tripTypes = types;
+    this._destinations = destinations;
     this._container = container;
     this._sort = new Sort();
     this._onDataChangeMain = onDataChange;
     this._statisticController = null;
     this._subscriptions = [];
 
-    this._daysController = new DaysController(this._container, this._onDataChange.bind(this));
+    this._daysController = new DaysController(this._container, this._onDataChange.bind(this), this._tripTypes, this._destinations);
 
-    this._init();
+    this.init();
   }
 
-  _init() {
+  init() {
+    if (this._points.length === 0) {
+      getAddNewEvent();
+      return;
+    }
+
     render(this._container, this._sort.getElement(), Position.AFTERBEGIN);
     this._sort.getElement()
 			.addEventListener(`click`, (evt) => this._sortLinkHandler(evt));
-
+    this.renderTrip();
   }
 
-  _renderTrip() {
+  renderTrip() {
+    if (this._points.length === 0) {
+      getAddNewEvent();
+      return;
+    }
     this._daysController.setPoints(this._points);
   }
 
   show(points) {
     if (points !== this._points) {
-      this._setPoints(points);
+      this._setPoints(sortArrayOfObjByDate(points));
     }
 
     this._container.classList.remove(`visually-hidden`);
@@ -39,7 +50,7 @@ export class TripController {
 
   _setPoints(points) {
     this._points = points;
-    this._renderTrip();
+    this.renderTrip();
   }
 
   _renderForSort(itemArray) {
@@ -56,7 +67,7 @@ export class TripController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView);
+        let pointController = new PointController(dayContainer, itemArray[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._tripTypes, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -79,7 +90,7 @@ export class TripController {
   _sortLinkHandler(evt) {
     switch (evt.target.htmlFor) {
       case `sort-event`:
-        this._renderTrip();
+        this.renderTrip();
         break;
       case `sort-time`:
         const sortedByDate = this._points.slice().sort((a, b) => (b.endTime - b.startTime) - (a.endTime - a.startTime));
@@ -95,7 +106,7 @@ export class TripController {
   _onDataChange(points) {
     this._points = points;
     this._onDataChangeMain(this._points);
-    this._renderTrip();
+    this.renderTrip();
   }
 
   hide() {
