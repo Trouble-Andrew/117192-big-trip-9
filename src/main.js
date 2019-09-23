@@ -108,6 +108,7 @@ api.getData({url: `offers`})
   .then(() => api.getPoints())
   .then((points) => {
     tripsData = points;
+    console.log(tripsData);
     // tripInfoData = getTripInfoData(points.slice().sort((a, b) => a - b));
     fillTripInfo(tripsData);
   })

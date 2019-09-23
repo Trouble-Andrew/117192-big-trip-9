@@ -1,5 +1,5 @@
 import {EventItemComponent} from './trip-item-component.js';
-import {pretext, shuffle} from './../utils.js';
+import {pretext} from './../utils.js';
 import moment from 'moment';
 
 export class TripItemEdit extends EventItemComponent {
@@ -21,7 +21,7 @@ export class TripItemEdit extends EventItemComponent {
   }
 
   _bind() {
-    // console.log(this._cities);
+    console.log(this);
     // console.log(this._tripTypes);
     this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
   }

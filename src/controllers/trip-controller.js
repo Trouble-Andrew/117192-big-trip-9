@@ -2,7 +2,7 @@ import {render, unrender, Position, sortArrayOfObjByDate, getAddNewEvent} from '
 import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {Mode as PointControllerMode, PointController} from './point-controller.js';
-import {DaysController} from './days-controller.js';
+// import {PointController} from './days-controller.js';
 
 export class TripController {
   constructor(container, points, onDataChange, types, destinations) {
@@ -15,7 +15,7 @@ export class TripController {
     this._statisticController = null;
     this._subscriptions = [];
 
-    this._daysController = new DaysController(this._container, this._onDataChange.bind(this), this._tripTypes, this._destinations);
+    this._PointController = new PointController(this._container, this._onDataChange.bind(this), this._tripTypes, this._destinations);
 
     this.init();
   }
@@ -37,7 +37,7 @@ export class TripController {
       getAddNewEvent();
       return;
     }
-    this._daysController.setPoints(this._points);
+    this._PointController.setPoints(this._points);
   }
 
   show(points) {
@@ -114,6 +114,6 @@ export class TripController {
   }
 
   createPoint() {
-    this._daysController.createPoint();
+    this._PointController.createPoint();
   }
 }
