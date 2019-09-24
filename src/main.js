@@ -11,8 +11,6 @@ import {TripController} from './controllers/trip-controller.js';
 import {StatisticController} from './controllers/statistics-controller.js';
 import API from "./api.js";
 import * as _ from 'lodash';
-import 'flatpickr/dist/flatpickr.min.css';
-import 'flatpickr/dist/themes/light.css';
 
 const tripInfoContainer = document.querySelector(`.trip-info`);
 const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
@@ -38,7 +36,7 @@ const api = new API(END_POINT, AUTHORIZATION);
 
 const onDataChange = (actionType, update, onError) => {
   if (actionType === null || update === null) {
-    tripController.renderTrip();
+    tripController.renderDays(tripsData);
     return;
   }
 
@@ -52,6 +50,8 @@ const onDataChange = (actionType, update, onError) => {
         .then((points) => {
           tripsData = points;
           tripController.show(points);
+          getAddNewEvent();
+          fillTripInfo(tripsData);
           // pageDataController.updatePage(points);
         })
         .catch(() => {
@@ -66,7 +66,10 @@ const onDataChange = (actionType, update, onError) => {
         .then((points) => {
           tripsData = points;
           console.log(tripsData);
-          tripController.show(points);
+          tripController.show(tripsData);
+          getAddNewEvent();
+          fillTripInfo(tripsData);
+          // console.log(document.querySelector(`.event--edit`));
           // pageDataController.updatePage(points);
         })
         .catch(() => {
@@ -80,7 +83,10 @@ const onDataChange = (actionType, update, onError) => {
         .then(() => api.getPoints())
         .then((points) => {
           tripsData = points;
-          tripController.show(points);
+          tripController.show(tripsData);
+          getAddNewEvent();
+          fillTripInfo(tripsData);
+
           // pageDataController.updatePage(points);
         })
         .catch(() => {
@@ -173,6 +179,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 
 newPointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
+  unrender(document.querySelector(`.trip-events__msg`));
   tripController.createPoint();
   tripController.show(tripsData);
 });

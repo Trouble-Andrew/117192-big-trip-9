@@ -11,7 +11,6 @@ export class TripItemEdit extends EventItemComponent {
     this._cities = cities;
     this._tripTypes = tripTypes;
     this._changeType();
-    // this._changeDescription();
     this._offersPriceAdder = this._offersPriceAdder.bind(this);
 
 
@@ -21,8 +20,6 @@ export class TripItemEdit extends EventItemComponent {
   }
 
   _bind() {
-    console.log(this);
-    // console.log(this._tripTypes);
     this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
   }
 
@@ -54,14 +51,6 @@ export class TripItemEdit extends EventItemComponent {
       });
     });
   }
-
-  // _changeDescription() {
-  //   let descriptionField = this.getElement().querySelector(`.event__destination-description`);
-  //   let destinationField = this.getElement().querySelector(`.event__input--destination`);
-  //   destinationField.addEventListener(`change`, () => {
-  //     descriptionField.innerHTML = shuffle(description.split(`.`)).slice(0, Math.floor(Math.random() * 3) + 1).join(`.`);
-  //   });
-  // }
 
   _getOfferId(title) {
     return `${title.split(` `).join(`-`).toLowerCase()}`;

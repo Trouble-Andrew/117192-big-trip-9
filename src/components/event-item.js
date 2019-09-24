@@ -1,10 +1,10 @@
 import {EventItemComponent} from './trip-item-component.js';
 import {TripItemEdit} from './trip-edit.js';
-import {diffGetTime, pretext} from './../utils.js';
+import {getFormattedTimeDifference, pretext} from './../utils.js';
 import moment from 'moment';
 
 export class TripItem extends EventItemComponent {
-  constructor(params, types, destinations) {
+  constructor(params) {
     super(params);
     this._allObj = params;
     // this._tripEdit = new TripItemEdit(this._allObj, types, destinations);
@@ -24,7 +24,7 @@ export class TripItem extends EventItemComponent {
             &mdash;
             <time class="event__end-time" datetime="${moment(this._endTime).format(`YYYY-MM-DDTHH:MM`)}">${moment(this._endTime).format(`HH:MM`)}</time>
           </p>
-          <p class="event__duration">${diffGetTime(this._startTime, this._endTime)}</p>
+          <p class="event__duration">${getFormattedTimeDifference(this._startTime, this._endTime)}</p>
         </div>
 
         <p class="event__price">

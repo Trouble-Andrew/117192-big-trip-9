@@ -12,26 +12,25 @@ export const shuffle = function (arr) {
   return arr;
 };
 
-export const diffGetTime = function (start, end) {
-  let date1 = new Date(start);
-  let date2 = new Date(end);
-  let diff = date2.getTime() - date1.getTime();
-  let msec = diff;
-  let hh = Math.floor(msec / 1000 / 60 / 60);
-  msec -= hh * 1000 * 60 * 60;
-  let mm = Math.floor(msec / 1000 / 60);
-  msec -= mm * 1000 * 60;
-  return `${hh}H:${mm.length === 1 ? mm + `0` : mm}M`;
+export const getFormattedTimeDifference = function (start, end) {
+  const diff = moment(end).diff(moment(start));
+  const duration = moment.duration(diff);
+
+  const minutesPart = `${String(duration.minutes()).padStart(2, `0`)}M`;
+  const hoursPart = (duration.days() > 0 || duration.hours() > 0) ? `${String(duration.hours()).padStart(2, `0`)}H` : ``;
+  const daysPart = duration.days() > 0 ? `${String(duration.days()).padStart(2, `0`)}D` : ``;
+
+  return `${daysPart} ${hoursPart} ${minutesPart}`;
 };
 
-export const sortArrayOfObjByDate = function (array) {
-  let byDate = array.slice(0);
+export const sortArrayOfObjByDate = function (tripPoints) {
+  let byDate = tripPoints.slice(0);
   return byDate.sort(function (a, b) {
     return a.startTime - b.startTime;
   });
 };
 
-export const fillTripInfo = (array) => {
+export const fillTripInfo = (tripPoints) => {
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   let tripCities = new Set([]);
   let tripDates = new Set([]);
@@ -41,15 +40,14 @@ export const fillTripInfo = (array) => {
   let tripDatesElem = document.querySelector(`.trip-info__dates`);
   let tripCostElem = document.querySelector(`.trip-info__cost`);
 
-  array.forEach(function (item) {
+  tripPoints.forEach(function (item) {
     tripCities.add(item.location);
     tripDates.add(new Date(item.startTime).getDate());
     tripCost.push(item.price);
   });
-
-  tripCitiesElem.innerHTML = `${Array.from(tripCities).join(`-`)}`;
-  tripDatesElem.innerHTML = `${moment(array[0].startTime).format(`D MMM`)} - ${moment(array[array.length - 1].startTime).format(`D MMM`)}`;
-  tripCostElem.innerHTML = `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}`;
+  tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${Array.from(tripCities)[0]} — ... — ${Array.from(tripCities)[Array.from(tripCities).length - 1]}` : `${Array.from(tripCities).join(`-`)}`;
+  tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} - ${moment(tripPoints[tripPoints.length - 1].startTime).format(`D MMM`)}` : `... — ...`;
+  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
 };
 
 export const Position = {
