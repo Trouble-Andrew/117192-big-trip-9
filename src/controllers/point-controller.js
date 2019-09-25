@@ -44,14 +44,14 @@ export class PointController {
   _renderTripItem(data, container, mode) {
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
-        if (this._tripEdit.getElement().parentNode === this._container) {
+        if (container.contains(this._tripEdit.getElement())) {
           this._tripEdit.resetForm();
-          this._container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
+          container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
         }
-
-        document.removeEventListener(`keydown`, this._onEscKeyDown);
+        document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
+
     let renderPosition = Position.BEFOREEND;
     let currentView = this._tripItem;
 
@@ -100,7 +100,7 @@ export class PointController {
             }),
         ON_DATA_CHANGE_DELAY);
 
-        document.removeEventListener(`keydown`, this._onEscKeyDown);
+        document.removeEventListener(`keydown`, onEscKeyDown);
         unrender(document.querySelector(`.event--edit`));
       });
 
@@ -112,76 +112,20 @@ export class PointController {
         document.addEventListener(`keydown`, onEscKeyDown);
       });
 
-    this._tripEdit.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        if (this._mode === Mode.ADDING) {
-          unrender(this._tripEdit.getElement());
-          this._tripEdit.removeElement();
-          this._onDataChange(null, null);
-        } else if (this._mode === Mode.DEFAULT) {
+    if (this._mode === Mode.DEFAULT) {
+      this._tripEdit.getElement()
+        .querySelector(`.event__rollup-btn`)
+        .addEventListener(`click`, () => {
           this._tripEdit.resetForm();
           container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
           document.removeEventListener(`keydown`, onEscKeyDown);
-        }
-      });
-
-    this._tripEdit.getElement()
-      .querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, () => {
-        this._tripEdit.resetForm();
-        container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    if (this._mode === Mode.DEFAULT) {
-      // this._tripEdit.getElement()
-      //   .querySelector(`.event__rollup-btn`)
-      //   .addEventListener(`click`, () => {
-      //     this._tripEdit.resetForm();
-      //     container.replaceChild(this._tripItem.getElement(), this._tripEdit.getElement());
-      //     document.removeEventListener(`keydown`, onEscKeyDown);
-      //   });
-
-      // this._tripEdit.getElement()
-      //   .querySelector(`.event__reset-btn`)
-      //   .addEventListener(`click`, () => {
-      //     this._onDataChange(null, this._data);
-      //   });
-      // this._tripEdit.getElement()
-      // .querySelector(`.event__reset-btn`)
-      // .addEventListener(`click`, (evt) => {
-      //   evt.preventDefault();
-      //
-      //   this.blockForm(`delete`, true);
-      //
-      //   if (mode === Mode.ADDING) {
-      //     unrender(this._tripEdit.getElement());
-      //     this._tripEdit.removeElement();
-      //     this._onDataChange(null, null);
-      //   } else if (mode === Mode.DEFAULT) {
-      //     setTimeout(this._onDataChange.bind(this, `delete`, this._data), ON_DATA_CHANGE_DELAY);
-      //   }
-      //   document.removeEventListener(`keydown`, this._onEscKeyDown);
-      // });
+        });
     }
-
-    // this._tripEdit.getElement()
-    //   .querySelector(`.event__reset-btn`)
-    //   .addEventListener(`click`, () => {
-    //     removeElement(this._tripEdit.getElement());
-    //     document.removeEventListener(`keydown`, onEscKeyDown);
-    //     this._tripEdit.removeElement();
-    //     this._tripItem.removeElement();
-    //     getAddNewEvent();
-    //     this._checkDays();
-    //   });
 
     this._tripEdit.getElement()
       .querySelector(`.event__reset-btn`)
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
-
         this.blockForm(`delete`, true);
         if (this._mode === Mode.ADDING) {
           unrender(this._tripEdit.getElement());

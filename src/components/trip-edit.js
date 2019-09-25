@@ -16,6 +16,7 @@ export class TripItemEdit extends EventItemComponent {
 
     this._changeOptionsByType();
     this._changeDescByCity();
+    this._setNumbersOnly();
     this._bind();
   }
 
@@ -125,6 +126,13 @@ export class TripItemEdit extends EventItemComponent {
     }
   }
 
+  _setNumbersOnly() {
+    this.getElement()
+      .querySelector(`.event__input--price`)
+      .addEventListener(`input`, (evt) => {
+        evt.target.value = evt.target.value.replace(/[^\d]/g, ``);
+      });
+  }
 
   resetForm() {
     this.getElement().reset();
@@ -240,12 +248,12 @@ export class TripItemEdit extends EventItemComponent {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${moment(this._startTime).format(`DD/MM/YY`)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${moment(this._startTime).format(`DD/MM/YY`)} ${moment(this._startTime).format(`HH:mm`)}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">
               To
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${new Date(this._endTime).toLocaleString(`en-GB`)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${moment(this._endTime).format(`DD/MM/YY`)} ${moment(this._endTime).format(`HH:mm`)}">
           </div>
 
           <div class="event__field-group  event__field-group--price">

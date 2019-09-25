@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as _ from 'lodash';
 
 export const shuffle = function (arr) {
   let j;
@@ -36,19 +37,22 @@ export const fillTripInfo = (tripPoints) => {
   let tripCities = [];
   let tripDates = new Set([]);
   let tripCost = [];
+  let offersCost = [];
 
   let tripCitiesElem = document.querySelector(`.trip-info__title`);
   let tripDatesElem = document.querySelector(`.trip-info__dates`);
   let tripCostElem = document.querySelector(`.trip-info__cost`);
 
   tripPoints.forEach(function (item) {
+    offersCost.push(_.map(_.filter(item.offers, [`accepted`, true]), `price`));
     tripCities.push(item.location);
     tripDates.add(new Date(item.startTime).getDate());
     tripCost.push(item.price);
   });
+
   tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${tripCities[0]} — ... — ${tripCities[tripCities.length - 1]}` : `${tripCities.join(`—`)}`;
   tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} — ${moment(tripPoints[tripPoints.length - 1].endTime).format(`D MMM`)}` : `... — ...`;
-  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
+  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + _.flattenDeep(offersCost).reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
 };
 
 export const Position = {

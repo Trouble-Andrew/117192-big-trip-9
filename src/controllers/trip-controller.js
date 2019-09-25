@@ -3,7 +3,7 @@ import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {Mode as PointControllerMode, PointController} from './point-controller.js';
 import moment from 'moment';
-import * as _ from 'lodash';
+// import * as _ from 'lodash';
 
 export class TripController {
   constructor(container, tripItems, onDataChange, types, destinations) {
@@ -120,7 +120,6 @@ export class TripController {
     this._subscriptions.forEach((subscription) => subscription());
 
     if (allPoints.length > this._tripItems.length) {
-      unrender(allPoints[0]);
       this._creatingPoint = null;
     }
   }

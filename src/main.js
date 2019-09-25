@@ -4,7 +4,7 @@ import {TripFilters} from './components/trip-filters.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {Statistics} from './components/statistics.js';
 import LoadingMessage from "./components/loading-message.js";
-import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType} from './utils.js';
+import {fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType} from './utils.js';
 import {renderComponent} from './render.js';
 // import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
@@ -22,8 +22,9 @@ const tripControls = new TripControls();
 const loadingMessage = new LoadingMessage();
 let statistics = new Statistics();
 
+let statisticController = null;
+
 let tripController = null;
-// let tripsData = sortArrayOfObjByDate(mockArray);
 
 const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
@@ -78,13 +79,10 @@ const onDataChange = (actionType, update, onError) => {
         .then(() => api.getPoints())
         .then((points) => {
           tripsData = points;
-          console.log(tripsData);
           tripController.show(tripsData);
           getAddNewEvent();
           fillTripInfo(tripsData);
           filterPointsHandler(getFilterType());
-          // console.log(document.querySelector(`.event--edit`));
-          // pageDataController.updatePage(points);
         })
         .catch(() => {
           onError();
@@ -101,7 +99,6 @@ const onDataChange = (actionType, update, onError) => {
           getAddNewEvent();
           fillTripInfo(tripsData);
           filterPointsHandler(getFilterType());
-          // pageDataController.updatePage(points);
         })
         .catch(() => {
           onError();
@@ -127,20 +124,15 @@ api.getData({url: `offers`})
   .then(() => api.getPoints())
   .then((points) => {
     tripsData = points;
-    console.log(tripsData);
-    // tripInfoData = getTripInfoData(points.slice().sort((a, b) => a - b));
     fillTripInfo(tripsData);
   })
   .then(() => {
-    // tripInfo.setTripInfoData(tripInfoData);
     tripController = new TripController(tripEventsContainer, tripsData, onDataChange, tripTypesWithOptions, citiesWithDescription);
   })
   .then(() => {
     unrender(loadingMessage.getElement());
     loadingMessage.removeElement();
     tripController.init();
-    // fullTripPriceElem.textContent = getFullEventPrice(tripsData);
-    // document.querySelector(`.trip-info__main`).replaceWith(tripInfo.getElement());
   });
 
 statistics.getElement().classList.add(`visually-hidden`);
@@ -160,9 +152,9 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 
   switch (evt.target.innerHTML) {
     case `Table`:
-      statistics.getElement().classList.add(`visually-hidden`);
+      // statistics.getElement().classList.add(`visually-hidden`);
+      statisticController.hide();
       tripController.show(tripsData);
-
       evt.target.classList.add(`trip-tabs__btn--active`);
       stats.classList.remove(`trip-tabs__btn--active`);
       table.classList.add(`trip-tabs__btn--active`);
