@@ -26,11 +26,11 @@ export class StatisticController {
   }
 
   hide() {
-    this._statistics.getElement().classList.add(`visually-hidden`);
+    this._container.classList.add(`visually-hidden`);
   }
 
   show() {
-    this._statistics.getElement().classList.remove(`visually-hidden`);
+    this._container.classList.remove(`visually-hidden`);
   }
 
   _drawChart(container, drawingData, title, format) {

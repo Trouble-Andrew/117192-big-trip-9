@@ -4,9 +4,3 @@ export const renderComponent = (markup, container, repeat = 1, position = `befor
   }
   callback();
 };
-
-// export const renderTripItem = (container, mockItem) => {
-//   let {type} = mockItem;
-//   container.insertAdjacentHTML(`beforeend`, getEventItemTemplate({type,}));
-//   // tasksForLoad = tasksForLoad.slice(1);
-// };

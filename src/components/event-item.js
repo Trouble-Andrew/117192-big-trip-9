@@ -1,14 +1,13 @@
 import {EventItemComponent} from './trip-item-component.js';
-import {TripItemEdit} from './trip-edit.js';
-import {diffGetTime, pretext} from './../utils.js';
+import {getFormattedTimeDifference, pretext} from './../utils.js';
 import moment from 'moment';
 
 export class TripItem extends EventItemComponent {
   constructor(params) {
     super(params);
     this._allObj = params;
-    this._tripEdit = new TripItemEdit(this._allObj);
     this._tripItemContainer = document.querySelector(`.trip-days`);
+    this._MAX_OFFERS_COUNT = 3;
   }
 
   getTemplate() {
@@ -24,7 +23,7 @@ export class TripItem extends EventItemComponent {
             &mdash;
             <time class="event__end-time" datetime="${moment(this._endTime).format(`YYYY-MM-DDTHH:MM`)}">${moment(this._endTime).format(`HH:MM`)}</time>
           </p>
-          <p class="event__duration">${diffGetTime(this._startTime, this._endTime)}</p>
+          <p class="event__duration">${getFormattedTimeDifference(this._startTime, this._endTime)}</p>
         </div>
 
         <p class="event__price">
@@ -34,11 +33,11 @@ export class TripItem extends EventItemComponent {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
 
-         ${this._offers.filter((offer) => offer.isChecked).map((offer) => `<li class="event__offer">
+         ${this._offers.filter((offer) => offer.accepted).map((offer) => `<li class="event__offer">
            <span class="event__offer-title">${offer.title}</span>
              &plus;
              &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-        </li>`).join(``)}
+        </li>`).slice(0, this._MAX_OFFERS_COUNT).join(``)}
         </ul>
 
         <button class="event__rollup-btn" type="button">
