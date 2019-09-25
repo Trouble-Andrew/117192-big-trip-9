@@ -48,7 +48,6 @@ class API {
   }
 
   updatePoint({id, point}) {
-    console.log(point);
     return this._load({
       url: `points/${id}`,
       method: Method.PUT,
@@ -60,7 +59,6 @@ class API {
   }
 
   deletePoint({id}) {
-    console.log(id);
     return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 

@@ -1,5 +1,4 @@
 import {EventItemComponent} from './trip-item-component.js';
-import {TripItemEdit} from './trip-edit.js';
 import {getFormattedTimeDifference, pretext} from './../utils.js';
 import moment from 'moment';
 
@@ -7,8 +6,8 @@ export class TripItem extends EventItemComponent {
   constructor(params) {
     super(params);
     this._allObj = params;
-    // this._tripEdit = new TripItemEdit(this._allObj, types, destinations);
     this._tripItemContainer = document.querySelector(`.trip-days`);
+    this._MAX_OFFERS_COUNT = 3;
   }
 
   getTemplate() {
@@ -38,7 +37,7 @@ export class TripItem extends EventItemComponent {
            <span class="event__offer-title">${offer.title}</span>
              &plus;
              &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-        </li>`).join(``)}
+        </li>`).slice(0, this._MAX_OFFERS_COUNT).join(``)}
         </ul>
 
         <button class="event__rollup-btn" type="button">

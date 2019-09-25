@@ -113,6 +113,48 @@ export class TripItemEdit extends EventItemComponent {
       });
   }
 
+  _getOfferId(title) {
+    return `${title.split(` `).join(`-`).toLowerCase()}`;
+  }
+
+  _setCurrentTypeChecked() {
+    const foundElement = Array.from(this.getElement().querySelectorAll(`input[name="event-type"]`)).find((eventType) => eventType.value === this._typeValue);
+
+    if (foundElement) {
+      foundElement.checked = true;
+    }
+  }
+
+
+  resetForm() {
+    this.getElement().reset();
+    this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${this._type}.png`;
+    this.getElement().querySelector(`.event__type-output`).textContent = `${pretext(this._type.charAt(0).toUpperCase() + this._type.slice(1))}`;
+    this.getElement().querySelector(`.event__destination-description`).textContent = `${this._description}`;
+    this.getElement().querySelector(`.event__favorite-checkbox`).checked = this._isFavorite;
+    this.getElement().style.boxShadow = ``;
+    this._setCurrentTypeChecked();
+
+    this.getElement().querySelector(`.event__photos-tape`).innerHTML = ``;
+    this.getElement().querySelector(`.event__section--destination`).classList.remove(`visually-hidden`);
+    this.getElement().querySelector(`.event__photos-tape`).insertAdjacentHTML(`beforeend`, this._photo.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join(``));
+
+    if (this._offers.length > 0) {
+      this.getElement().querySelector(`.event__section--offers`).classList.remove(`visually-hidden`);
+      this.getElement().querySelector(`.event__available-offers`).innerHTML = ``;
+      this.getElement().querySelector(`.event__available-offers`).insertAdjacentHTML(`beforeend`, `${this._offers.map(({title, price, accepted}) => `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="${this._getOfferId(title)}-1" type="checkbox" name="${this._getOfferId(title)}" ${accepted ? `checked` : ``}>
+        <label class="event__offer-label" for="${this._getOfferId(title)}-1">
+          <span class="event__offer-title">${title}</span>
+          &plus;
+          &euro;&nbsp;<span class="event__offer-price">${price}</span>
+        </label>
+      </div>`).join(``)}`);
+    } else if (!this.getElement().querySelector(`.event__section--offers`).classList.contains(`visually-hidden`)) {
+      this.getElement().querySelector(`.event__section--offers`).classList.add(`visually-hidden`);
+    }
+  }
+
   getTemplate() {
     return `<form class="trip-events__item  event  event--edit" id="${this._params.id}" action="#" method="post">
         <header class="event__header">

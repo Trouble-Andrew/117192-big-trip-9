@@ -4,7 +4,7 @@ import {TripFilters} from './components/trip-filters.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {Statistics} from './components/statistics.js';
 import LoadingMessage from "./components/loading-message.js";
-import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent, render, unrender, Position} from './utils.js';
+import {sortArrayOfObjByDate, fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType} from './utils.js';
 import {renderComponent} from './render.js';
 // import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
@@ -29,10 +29,23 @@ const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
 const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
 const api = new API(END_POINT, AUTHORIZATION);
 
-// const onDataChange = (points) => {
-//   tripsData = points;
-//   fillTripInfo(tripsData);
-// };
+const filterPointsHandler = (element) => {
+  const filterAll = `filter-everything`;
+  const filterFuture = `filter-future`;
+  const filterPast = `filter-past`;
+
+  switch (element) {
+    case filterAll:
+      tripController.show(tripsData);
+      break;
+    case filterFuture:
+      tripController.show(_.filter(tripsData, (point) => point.startTime > Date.now()));
+      break;
+    case filterPast:
+      tripController.show(_.filter(tripsData, (point) => point.startTime < Date.now()));
+      break;
+  }
+};
 
 const onDataChange = (actionType, update, onError) => {
   if (actionType === null || update === null) {
@@ -52,7 +65,7 @@ const onDataChange = (actionType, update, onError) => {
           tripController.show(points);
           getAddNewEvent();
           fillTripInfo(tripsData);
-          // pageDataController.updatePage(points);
+          getFilterType();
         })
         .catch(() => {
           onError();
@@ -69,6 +82,7 @@ const onDataChange = (actionType, update, onError) => {
           tripController.show(tripsData);
           getAddNewEvent();
           fillTripInfo(tripsData);
+          filterPointsHandler(getFilterType());
           // console.log(document.querySelector(`.event--edit`));
           // pageDataController.updatePage(points);
         })
@@ -86,7 +100,7 @@ const onDataChange = (actionType, update, onError) => {
           tripController.show(tripsData);
           getAddNewEvent();
           fillTripInfo(tripsData);
-
+          filterPointsHandler(getFilterType());
           // pageDataController.updatePage(points);
         })
         .catch(() => {
@@ -99,7 +113,6 @@ const onDataChange = (actionType, update, onError) => {
 };
 
 let tripsData = null;
-// let tripInfoData = null;
 let tripTypesWithOptions = null;
 let citiesWithDescription = null;
 
@@ -139,15 +152,6 @@ renderComponent(getTripInfoTemplate(), tripInfoContainer, 1, `afterbegin`);
 render(tripControlsContainer, tripControls.getElement(), Position.BEFORE);
 render(tripControlsContainer, tripFilters.getElement(), Position.BEFORE);
 renderComponent(getTripDayTemplate(), tripEventsContainer);
-// fillTripInfo(tripsData);
-
-// let tripController = new TripController(tripEventsContainer, onDataChange);
-// let statisticController = new StatisticController(statistics.getElement(), tripsData);
-// statisticController.hide();
-// let statisticController;
-// tripController.show(tripsData);
-// getAddNewEvent();
-
 
 tripControls.getElement().addEventListener(`click`, (evt) => {
   const table = tripControls.getElement().querySelector(`.trip-tabs__btn`);
@@ -190,20 +194,5 @@ tripFilters.getElement().addEventListener(`change`, (evt) => {
   if (evt.target.tagName !== `INPUT`) {
     return;
   }
-
-  const filterAll = `filter-everything`;
-  const filterFuture = `filter-future`;
-  const filterPast = `filter-past`;
-
-  switch (evt.target.id) {
-    case filterAll:
-      tripController.show(tripsData);
-      break;
-    case filterFuture:
-      tripController.show(_.filter(tripsData, (point) => point.startTime > Date.now()));
-      break;
-    case filterPast:
-      tripController.show(_.filter(tripsData, (point) => point.startTime < Date.now()));
-      break;
-  }
+  filterPointsHandler(evt.target.id);
 });

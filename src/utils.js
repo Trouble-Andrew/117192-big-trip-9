@@ -31,8 +31,9 @@ export const sortArrayOfObjByDate = function (tripPoints) {
 };
 
 export const fillTripInfo = (tripPoints) => {
+  tripPoints = sortArrayOfObjByDate(tripPoints);
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  let tripCities = new Set([]);
+  let tripCities = [];
   let tripDates = new Set([]);
   let tripCost = [];
 
@@ -41,12 +42,12 @@ export const fillTripInfo = (tripPoints) => {
   let tripCostElem = document.querySelector(`.trip-info__cost`);
 
   tripPoints.forEach(function (item) {
-    tripCities.add(item.location);
+    tripCities.push(item.location);
     tripDates.add(new Date(item.startTime).getDate());
     tripCost.push(item.price);
   });
-  tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${Array.from(tripCities)[0]} — ... — ${Array.from(tripCities)[Array.from(tripCities).length - 1]}` : `${Array.from(tripCities).join(`-`)}`;
-  tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} - ${moment(tripPoints[tripPoints.length - 1].startTime).format(`D MMM`)}` : `... — ...`;
+  tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${tripCities[0]} — ... — ${tripCities[tripCities.length - 1]}` : `${tripCities.join(`—`)}`;
+  tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} — ${moment(tripPoints[tripPoints.length - 1].endTime).format(`D MMM`)}` : `... — ...`;
   tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
 };
 
@@ -89,7 +90,13 @@ export const getAddNewEvent = () => {
   let tripEventsContainer = document.querySelector(`.trip-events`);
   let allEvents = tripEventsContainer.querySelectorAll(`.trip-days__item`);
   if (allEvents.length === 0) {
-    tripEventsContainer.innerHTML = `<p class="trip-events__msg">Click New Event to create your first point</p>`;
+    Array.from(tripEventsContainer.children).forEach((element) => element.classList.add(`visually-hidden`));
+    tripEventsContainer.querySelector(`h2`).classList.add(`visually-hidden`);
+    tripEventsContainer.insertAdjacentHTML(`afterbegin`, `<p class="trip-events__msg">Click New Event to create your first point</p>`);
+  } else {
+    Array.from(tripEventsContainer.children).forEach((element) => element.classList.remove(`visually-hidden`));
+    tripEventsContainer.querySelector(`h2`).classList.add(`visually-hidden`);
+    unrender(document.querySelector(`.trip-events__msg`));
   }
 };
 
@@ -130,4 +137,21 @@ export const pretext = (text) => {
       break;
   }
   return phrase;
+};
+
+export const getFilterType = () => {
+  const filters = document.querySelector(`.trip-filters`);
+  const filtersNodes = filters.querySelectorAll(`input`);
+  const checkedElement = Array.from(filtersNodes).filter((element) => element.checked === true);
+
+  return checkedElement[0].id;
+};
+
+export const getSortType = () => {
+  const sort = document.querySelector(`.trip-sort`);
+
+  const sortNodes = sort.querySelectorAll(`input`);
+  const checkedElement = Array.from(sortNodes).filter((element) => element.checked === true);
+
+  return checkedElement[0].id;
 };
