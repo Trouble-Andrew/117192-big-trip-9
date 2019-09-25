@@ -4,7 +4,7 @@ import {TripFilters} from './components/trip-filters.js';
 import {getTripDayTemplate} from './components/trip-day.js';
 import {Statistics} from './components/statistics.js';
 import LoadingMessage from "./components/loading-message.js";
-import {fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType} from './utils.js';
+import {fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType, setDisabledValue} from './utils.js';
 import {renderComponent} from './render.js';
 // import {mockArray} from './data.js';
 import {TripController} from './controllers/trip-controller.js';
@@ -152,12 +152,13 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 
   switch (evt.target.innerHTML) {
     case `Table`:
-      // statistics.getElement().classList.add(`visually-hidden`);
       statisticController.hide();
       tripController.show(tripsData);
+      filterPointsHandler(getFilterType());
       evt.target.classList.add(`trip-tabs__btn--active`);
       stats.classList.remove(`trip-tabs__btn--active`);
       table.classList.add(`trip-tabs__btn--active`);
+      setDisabledValue(document.querySelectorAll(`.trip-filters__filter-input`), false);
       break;
     case `Stats`:
       tripController.hide();
@@ -169,6 +170,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
       table.classList.remove(`trip-tabs__btn--active`);
       stats.classList.add(`trip-tabs__btn--active`);
       statisticController = new StatisticController(statistics.getElement(), tripsData);
+      setDisabledValue(document.querySelectorAll(`.trip-filters__filter-input`), true);
       break;
   }
 });
@@ -176,8 +178,8 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
 newPointButton.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   unrender(document.querySelector(`.trip-events__msg`));
-  tripController.createPoint();
   tripController.show(tripsData);
+  tripController.createPoint();
 });
 
 tripFilters.getElement().addEventListener(`change`, (evt) => {

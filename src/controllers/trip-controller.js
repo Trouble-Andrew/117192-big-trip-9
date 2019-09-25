@@ -3,7 +3,6 @@ import {Day} from './../components/day.js';
 import {Sort} from './../components/sort.js';
 import {Mode as PointControllerMode, PointController} from './point-controller.js';
 import moment from 'moment';
-// import * as _ from 'lodash';
 
 export class TripController {
   constructor(container, tripItems, onDataChange, types, destinations) {
@@ -84,8 +83,10 @@ export class TripController {
   }
 
   _underderContainer() {
+    unrender(document.querySelector(`.event--edit`));
     let containerChilds = this._container.querySelectorAll(`.trip-days__item`);
     containerChilds.forEach((item) => unrender(item));
+    this._creatingPoint = null;
   }
 
   _findDates(itemArray) {
@@ -163,15 +164,9 @@ export class TripController {
     };
 
     this._onChangeView();
-
     this._creatingPoint = new PointController(this._container.querySelector(`.trip-days`), defaultPoint, PointControllerMode.ADDING, (...args) => {
       this._creatingTask = null;
       this._onDataChange(...args);
     }, this.onChangeView, this._tripTypes, this._destinations);
-
-    if (this._container.querySelector(`.event--edit`) === null) {
-      this._creatingTask = null;
-    }
-
   }
 }

@@ -96,12 +96,11 @@ export class PointController {
             mode === Mode.DEFAULT ? `update` : `create`,
             entry,
             () => {
-              this.onErrorDataChange();
+              this._onErrorDataChange();
             }),
         ON_DATA_CHANGE_DELAY);
 
         document.removeEventListener(`keydown`, onEscKeyDown);
-        unrender(document.querySelector(`.event--edit`));
       });
 
     this._tripItem.getElement()
@@ -227,5 +226,21 @@ export class PointController {
       buttonSave.textContent = `Save`;
       buttonDelete.textContent = `Delete`;
     }
+  }
+
+  _shakeTask() {
+    const ANIMATION_TIMEOUT = 600;
+    const editEventElement = this._tripEdit.getElement();
+    editEventElement.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      editEventElement.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
+  _onErrorDataChange() {
+    this._shakeTask();
+    this.blockForm(null, false);
+    this._tripEdit.getElement().style.boxShadow = `0 0 10px 0 red`;
   }
 }

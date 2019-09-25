@@ -159,3 +159,9 @@ export const getSortType = () => {
 
   return checkedElement[0].id;
 };
+
+export const setDisabledValue = (elements, value) => {
+  elements.forEach((elem) => {
+    elem.disabled = value;
+  });
+};
