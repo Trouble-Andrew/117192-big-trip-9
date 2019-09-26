@@ -46,15 +46,14 @@ class TripController {
 
     allDates.forEach((day) => {
       let days = points.filter((obj) => new Date(obj.startTime).getDate() === day);
-      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
-      let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       dayCounter += this._showDays(previousDate, days[0].startTime);
+      let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       previousDate = previousDate === 0 ? days[0].startTime : previousDate;
       previousDate = days[0].startTime;
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
-
+      let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
+        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._tripTypes, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
