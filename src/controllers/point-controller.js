@@ -1,6 +1,6 @@
 import {render, unrender, Position} from './../utils.js';
 import TripItem from './../components/event-item.js';
-import TripItemEdit from './../components/trip-edit.js';
+import TripEdit from './../components/trip-edit.js';
 import moment from 'moment';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -23,7 +23,8 @@ export class PointController {
     this._tripTypes = types;
     this._destinations = destinations;
     this._mode = mode;
-    this._tripEdit = new TripItemEdit(data, mode, types, destinations);
+    this._tripEdit = new TripEdit(data, mode, types, destinations);
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
 
     this.create(this._mode);
   }
@@ -39,16 +40,17 @@ export class PointController {
     }
   }
 
-  _renderPoint(data, container, mode) {
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        if (container.contains(this._tripEdit.getElement())) {
-          this._tripEdit.resetForm();
-          container.replaceChild(this._point.getElement(), this._tripEdit.getElement());
-        }
-        document.removeEventListener(`keydown`, onEscKeyDown);
+  _onEscKeyDown(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      if (this._container.contains(this._tripEdit.getElement())) {
+        this._tripEdit.resetForm();
+        this._container.replaceChild(this._point.getElement(), this._tripEdit.getElement());
       }
-    };
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
+  }
+
+  _renderPoint(data, container, mode) {
 
     let renderPosition = Position.BEFOREEND;
     let currentView = this._point;
@@ -98,7 +100,7 @@ export class PointController {
             }),
         ON_DATA_CHANGE_DELAY);
 
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, this._onEscKeyDown);
       });
 
     this._point.getElement()
@@ -109,7 +111,7 @@ export class PointController {
 
         this._onChangeView();
         container.replaceChild(this._tripEdit.getElement(), this._point.getElement());
-        document.addEventListener(`keydown`, onEscKeyDown);
+        document.addEventListener(`keydown`, this._onEscKeyDown);
       });
 
     if (this._mode === Mode.DEFAULT) {
@@ -118,7 +120,7 @@ export class PointController {
         .addEventListener(`click`, () => {
           this._tripEdit.resetForm();
           container.replaceChild(this._point.getElement(), this._tripEdit.getElement());
-          document.removeEventListener(`keydown`, onEscKeyDown);
+          document.removeEventListener(`keydown`, this._onEscKeyDown);
         });
     }
 
@@ -134,12 +136,13 @@ export class PointController {
         } else if (this._mode === Mode.DEFAULT) {
           setTimeout(this._onDataChange.bind(this, `delete`, this._data), ON_DATA_CHANGE_DELAY);
         }
+        document.removeEventListener(`keydown`, this._onEscKeyDown);
       });
     render(container, currentView.getElement(), renderPosition);
   }
 
   _checkDays() {
-    let allDays = document.querySelectorAll(`.trip-days__item`);
+    const allDays = document.querySelectorAll(`.trip-days__item`);
     Array.from(allDays).forEach((day) => {
       if (Array.from(day.querySelectorAll(`.event`)).length === 0) {
         unrender(day);
@@ -243,5 +246,6 @@ export class PointController {
     this._shakeTask();
     this.blockForm(null, false);
     this._tripEdit.getElement().style.boxShadow = `0 0 10px 0 red`;
+    document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 }

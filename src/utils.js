@@ -1,18 +1,6 @@
 import moment from 'moment';
 import * as _ from 'lodash';
 
-export const shuffle = function (arr) {
-  let j;
-  let temp;
-  for (let i = arr.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
-  }
-  return arr;
-};
-
 export const getFormattedTimeDifference = function (start, end) {
   const diff = moment(end).diff(moment(start));
   const duration = moment.duration(diff);
@@ -25,7 +13,7 @@ export const getFormattedTimeDifference = function (start, end) {
 };
 
 export const sortByDate = function (tripPoints) {
-  let byDate = tripPoints.slice(0);
+  const byDate = tripPoints.slice(0);
   return byDate.sort(function (a, b) {
     return a.startTime - b.startTime;
   });
@@ -40,9 +28,9 @@ export const fillTripInfo = (tripPoints) => {
   let offersCost = [];
   let totalOfferCost = 0;
 
-  let tripCitiesElem = document.querySelector(`.trip-info__title`);
-  let tripDatesElem = document.querySelector(`.trip-info__dates`);
-  let tripCostElem = document.querySelector(`.trip-info__cost`);
+  const tripCitiesElem = document.querySelector(`.trip-info__title`);
+  const tripDatesElem = document.querySelector(`.trip-info__dates`);
+  const tripCostElem = document.querySelector(`.trip-info__cost`);
 
   tripPoints.forEach(function (item) {
     offersCost.push(_.map(_.filter(item.offers, [`accepted`, true]), `price`));
@@ -90,8 +78,8 @@ export const unrender = (element) => {
 };
 
 export const getAddNewEvent = () => {
-  let tripEventsContainer = document.querySelector(`.trip-events`);
-  let allEvents = document.querySelectorAll(`.trip-days__item`);
+  const tripEventsContainer = document.querySelector(`.trip-events`);
+  const allEvents = document.querySelectorAll(`.trip-days__item`);
   if (allEvents.length === 0) {
     Array.from(tripEventsContainer.children).forEach((element) => element.classList.add(`visually-hidden`));
     tripEventsContainer.querySelector(`h2`).classList.add(`visually-hidden`);

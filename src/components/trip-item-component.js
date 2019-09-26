@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-class EventItemComponent extends AbstractComponent {
+class TripItemComponent extends AbstractComponent {
   constructor({type, location, startTime, endTime, price, offers, photo, description, isFavorite, dayCounter = null}) {
     super();
     this._element = null;
@@ -21,4 +21,4 @@ class EventItemComponent extends AbstractComponent {
   }
 }
 
-export default EventItemComponent;
+export default TripItemComponent;

@@ -191,10 +191,10 @@ class StatisticController {
     return useOfTransport;
   }
 
-  _getLabel(obj, point) {
+  _getLabel(object, point) {
     const label = `${ICONS[point.type].icon} ${point.type.toUpperCase()}`;
-    if (!obj[label]) {
-      obj[label] = 0;
+    if (!object[label]) {
+      object[label] = 0;
     }
     return label;
   }

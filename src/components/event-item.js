@@ -1,8 +1,8 @@
-import EventItemComponent from './trip-item-component.js';
+import TripItemComponent from './trip-item-component.js';
 import {getFormattedTimeDifference, pretext} from './../utils.js';
 import moment from 'moment';
 
-class TripItem extends EventItemComponent {
+class TripItem extends TripItemComponent {
   constructor(params) {
     super(params);
     this._allObj = params;
