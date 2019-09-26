@@ -10,17 +10,12 @@ class TripItemEdit extends EventItemComponent {
     this._id = id;
     this._cities = cities;
     this._tripTypes = tripTypes;
-    this._changeType();
 
+    this._changeType();
     this._changeOptionsByType();
     this._changeDescByCity();
     this._setNumbersOnly();
-    // this._bind();
   }
-
-  // _bind() {
-  //   this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
-  // }
 
   _changeType() {
     let item = this;
@@ -45,9 +40,7 @@ class TripItemEdit extends EventItemComponent {
           const typeData = this._tripTypes.find(({type}) => type === target.value);
 
           this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${typeData.type}.png`;
-          // this.getElement().querySelector(`.event__type-output`).textContent = `${makeFirstSymUp(typeData.type)} ${TRANSPORT_TYPES.has(typeData.type) ? `to` : `in`}`;
           this.getElement().querySelector(`.event__type-toggle`).checked = false;
-
           this.getElement().querySelector(`.event__available-offers`).innerHTML = ``;
 
           if (typeData.offers.length === 0) {

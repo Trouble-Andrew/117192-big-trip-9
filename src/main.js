@@ -161,10 +161,10 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
       statistics = null;
       statistics = new Statistics();
       render(pageContainer, statistics.getElement(), Position.AFTERBEGIN);
+      statisticController = new StatisticController(statistics.getElement(), tripsData);
       evt.target.classList.add(`trip-tabs__btn--active`);
       table.classList.remove(`trip-tabs__btn--active`);
       stats.classList.add(`trip-tabs__btn--active`);
-      statisticController = new StatisticController(statistics.getElement(), tripsData);
       setDisabledValue(document.querySelectorAll(`.trip-filters__filter-input`), true);
       break;
   }

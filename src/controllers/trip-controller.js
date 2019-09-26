@@ -46,12 +46,13 @@ class TripController {
 
     allDates.forEach((day) => {
       let days = points.filter((obj) => new Date(obj.startTime).getDate() === day);
-      dayCounter += this._showDays(previousDate, days[0].startTime);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
+      let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
+      dayCounter += this._showDays(previousDate, days[0].startTime);
       previousDate = previousDate === 0 ? days[0].startTime : previousDate;
       previousDate = days[0].startTime;
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
-      let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
+
       Array.from(tripDaysContainer).forEach((dayContainer) => {
         let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
         index += 1;
@@ -72,8 +73,9 @@ class TripController {
     allDates.forEach((day) => {
       let days = points.filter((obj) => new Date(obj.startTime).getDate() === day);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
-      render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
+      render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
+
       Array.from(tripDaysContainer).forEach((dayContainer) => {
         let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
         index += 1;
@@ -118,6 +120,7 @@ class TripController {
 
   _onChangeView() {
     const allPoints = this._container.querySelectorAll(`.trip-events__item`);
+
     this._subscriptions.forEach((subscription) => subscription());
 
     if (allPoints.length > this._items.length) {
@@ -148,7 +151,9 @@ class TripController {
   }
 
   createPoint() {
-    if (this._creatingPoint) {
+    if (document.querySelector(`#undefined`) === null) {
+      this._creatingPoint = this._creatingPoint === undefined ? null : null;
+    } else if (this._creatingPoint) {
       return;
     }
     const defaultPoint = {
@@ -165,7 +170,7 @@ class TripController {
 
     this._onChangeView();
     this._creatingPoint = new PointController(this._container.querySelector(`.trip-days`), defaultPoint, PointControllerMode.ADDING, (...args) => {
-      this._creatingTask = null;
+      this._creatingPoint = null;
       this._onDataChange(...args);
     }, this.onChangeView, this._types, this._destinations);
   }

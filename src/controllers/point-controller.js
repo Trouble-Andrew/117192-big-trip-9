@@ -104,6 +104,9 @@ export class PointController {
     this._point.getElement()
       .querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, () => {
+        const editField = document.querySelector(`#undefined`);
+        unrender(editField);
+
         this._onChangeView();
         container.replaceChild(this._tripEdit.getElement(), this._point.getElement());
         document.addEventListener(`keydown`, onEscKeyDown);
