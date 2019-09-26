@@ -24,7 +24,7 @@ const tripInfo = new TripInfo();
 const tripDay = new TripDay();
 const loadingMessage = new LoadingMessage();
 
-const filterPointsHandler = (element) => {
+const onChangeFilter = (element) => {
   const filterAll = `filter-everything`;
   const filterFuture = `filter-future`;
   const filterPast = `filter-past`;
@@ -76,7 +76,7 @@ const onDataChange = (actionType, update, onError) => {
           tripController.show(tripsData);
           getAddNewEvent();
           fillTripInfo(tripsData);
-          filterPointsHandler(getFilterType());
+          onChangeFilter(getFilterType());
         })
         .catch(() => {
           onError();
@@ -92,7 +92,7 @@ const onDataChange = (actionType, update, onError) => {
           tripController.show(tripsData);
           getAddNewEvent();
           fillTripInfo(tripsData);
-          filterPointsHandler(getFilterType());
+          onChangeFilter(getFilterType());
         })
         .catch(() => {
           onError();
@@ -149,7 +149,7 @@ tripControls.getElement().addEventListener(`click`, (evt) => {
     case `Table`:
       statisticController.hide();
       tripController.show(tripsData);
-      filterPointsHandler(getFilterType());
+      onChangeFilter(getFilterType());
       evt.target.classList.add(`trip-tabs__btn--active`);
       stats.classList.remove(`trip-tabs__btn--active`);
       table.classList.add(`trip-tabs__btn--active`);
@@ -182,5 +182,5 @@ tripFilters.getElement().addEventListener(`change`, (evt) => {
   if (evt.target.tagName !== `INPUT`) {
     return;
   }
-  filterPointsHandler(evt.target.id);
+  onChangeFilter(evt.target.id);
 });
