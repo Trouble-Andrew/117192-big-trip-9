@@ -38,6 +38,7 @@ export const fillTripInfo = (tripPoints) => {
   let tripDates = new Set([]);
   let tripCost = [];
   let offersCost = [];
+  let totalOfferCost = 0;
 
   let tripCitiesElem = document.querySelector(`.trip-info__title`);
   let tripDatesElem = document.querySelector(`.trip-info__dates`);
@@ -50,9 +51,11 @@ export const fillTripInfo = (tripPoints) => {
     tripCost.push(item.price);
   });
 
+  totalOfferCost = _.flattenDeep(offersCost).length === 0 ? 0 : _.flattenDeep(offersCost).reduce(reducer);
+
   tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${tripCities[0]} — ... — ${tripCities[tripCities.length - 1]}` : `${tripCities.join(`—`)}`;
   tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} — ${moment(tripPoints[tripPoints.length - 1].endTime).format(`D MMM`)}` : `... — ...`;
-  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + _.flattenDeep(offersCost).reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
+  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + totalOfferCost}` : `Total: &euro;&nbsp; 0`;
 };
 
 export const Position = {

@@ -43,9 +43,9 @@ class TripController {
     let dayCounter = 0;
     let previousDate = 0;
     const allDates = this._findDates(points);
-
     allDates.forEach((day) => {
-      let days = points.filter((obj) => new Date(obj.startTime).getDate() === day);
+
+      let days = points.filter((obj) => moment(obj.startTime).format(`MM/DD`) === day);
       dayCounter += this._showDays(previousDate, days[0].startTime);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       previousDate = previousDate === 0 ? days[0].startTime : previousDate;
@@ -70,7 +70,7 @@ class TripController {
     const allDates = this._findDates(points);
 
     allDates.forEach((day) => {
-      let days = points.filter((obj) => new Date(obj.startTime).getDate() === day);
+      let days = points.filter((obj) => moment(obj.startTime).format(`MM/DD`) === day);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
@@ -93,7 +93,7 @@ class TripController {
   _findDates(points) {
     let allDates = new Set([]);
     points.forEach(function (item) {
-      allDates.add(new Date(item.startTime).getDate());
+      allDates.add(moment(item.startTime).format(`MM/DD`));
     });
     return Array.from(allDates);
   }
