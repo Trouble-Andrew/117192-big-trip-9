@@ -24,7 +24,7 @@ export const getFormattedTimeDifference = function (start, end) {
   return `${daysPart} ${hoursPart} ${minutesPart}`;
 };
 
-export const sortArrayOfObjByDate = function (tripPoints) {
+export const sortByDate = function (tripPoints) {
   let byDate = tripPoints.slice(0);
   return byDate.sort(function (a, b) {
     return a.startTime - b.startTime;
@@ -32,12 +32,13 @@ export const sortArrayOfObjByDate = function (tripPoints) {
 };
 
 export const fillTripInfo = (tripPoints) => {
-  tripPoints = sortArrayOfObjByDate(tripPoints);
+  tripPoints = sortByDate(tripPoints);
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   let tripCities = [];
   let tripDates = new Set([]);
   let tripCost = [];
   let offersCost = [];
+  let totalOfferCost = 0;
 
   let tripCitiesElem = document.querySelector(`.trip-info__title`);
   let tripDatesElem = document.querySelector(`.trip-info__dates`);
@@ -50,9 +51,11 @@ export const fillTripInfo = (tripPoints) => {
     tripCost.push(item.price);
   });
 
+  totalOfferCost = _.flattenDeep(offersCost).length === 0 ? 0 : _.flattenDeep(offersCost).reduce(reducer);
+
   tripCitiesElem.innerHTML = tripPoints.length > 3 ? `${tripCities[0]} — ... — ${tripCities[tripCities.length - 1]}` : `${tripCities.join(`—`)}`;
   tripDatesElem.innerHTML = tripPoints.length !== 0 ? `${moment(tripPoints[0].startTime).format(`D MMM`)} — ${moment(tripPoints[tripPoints.length - 1].endTime).format(`D MMM`)}` : `... — ...`;
-  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + _.flattenDeep(offersCost).reduce(reducer)}` : `Total: &euro;&nbsp; 0`;
+  tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + totalOfferCost}` : `Total: &euro;&nbsp; 0`;
 };
 
 export const Position = {
@@ -64,10 +67,6 @@ export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
-};
-
-export const removeElement = (element) => {
-  element.remove();
 };
 
 export const render = (container, element, place) => {
@@ -92,7 +91,7 @@ export const unrender = (element) => {
 
 export const getAddNewEvent = () => {
   let tripEventsContainer = document.querySelector(`.trip-events`);
-  let allEvents = tripEventsContainer.querySelectorAll(`.trip-days__item`);
+  let allEvents = document.querySelectorAll(`.trip-days__item`);
   if (allEvents.length === 0) {
     Array.from(tripEventsContainer.children).forEach((element) => element.classList.add(`visually-hidden`));
     tripEventsContainer.querySelector(`h2`).classList.add(`visually-hidden`);
@@ -144,18 +143,19 @@ export const pretext = (text) => {
 };
 
 export const getFilterType = () => {
-  const filters = document.querySelector(`.trip-filters`);
-  const filtersNodes = filters.querySelectorAll(`input`);
+  const filtersNodes = document.querySelectorAll(`input`);
   const checkedElement = Array.from(filtersNodes).filter((element) => element.checked === true);
-
   return checkedElement[0].id;
 };
 
 export const getSortType = () => {
-  const sort = document.querySelector(`.trip-sort`);
-
-  const sortNodes = sort.querySelectorAll(`input`);
+  const sortNodes = document.querySelectorAll(`.trip-sort__input`);
   const checkedElement = Array.from(sortNodes).filter((element) => element.checked === true);
-
   return checkedElement[0].id;
+};
+
+export const setDisabledValue = (elements, value) => {
+  elements.forEach((elem) => {
+    elem.disabled = value;
+  });
 };

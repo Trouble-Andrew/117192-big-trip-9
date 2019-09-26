@@ -1,5 +1,3 @@
-// import {TRANSPORT_TYPES} from "./utils.js";
-
 class ModelPoint {
   constructor(data) {
     this.id = data[`id`];
@@ -9,7 +7,6 @@ class ModelPoint {
     this.endTime = data[`date_to`];
     this.price = data[`base_price`];
     this.isFavorite = data[`is_favorite`];
-    // this.offers = data[`offers`];
     this.offers = data[`offers`];
     this.location = data[`destination`].name;
     this.description = data[`destination`].description;
@@ -17,7 +14,6 @@ class ModelPoint {
   }
 
   static parsePoint(pointData) {
-    // console.log(pointData);
     return new ModelPoint(pointData);
   }
 

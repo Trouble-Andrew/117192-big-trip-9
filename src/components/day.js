@@ -1,7 +1,7 @@
-import {AbstractComponent} from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 import moment from 'moment';
 
-export class Day extends AbstractComponent {
+class Day extends AbstractComponent {
   constructor(dueDate, itemsCount, dayCounter) {
     super(dueDate, itemsCount);
     this._startTime = dueDate;
@@ -29,3 +29,5 @@ export class Day extends AbstractComponent {
       </li>`;
   }
 }
+
+export default Day;

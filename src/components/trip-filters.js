@@ -1,6 +1,6 @@
-import {AbstractComponent} from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 
-export class TripFilters extends AbstractComponent {
+class TripFilters extends AbstractComponent {
   getTemplate() {
     return `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
@@ -22,3 +22,5 @@ export class TripFilters extends AbstractComponent {
     </form>`;
   }
 }
+
+export default TripFilters;

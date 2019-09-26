@@ -1,4 +1,9 @@
-export const getTripDayTemplate = () => `<ul class="trip-days">
+import AbstractComponent from './abstract-component.js';
 
-  </ul>
-  `;
+export class TripDay extends AbstractComponent {
+  getTemplate() {
+    return `<ul class="trip-days"></ul>`;
+  }
+}
+
+export default TripDay;

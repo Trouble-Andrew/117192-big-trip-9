@@ -1,12 +1,64 @@
-import {Statistics} from './../components/statistics.js';
-import {TYPES_MAP} from './../components/types-map.js';
+import Statistics from './../components/statistics.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import moment from 'moment';
 
 const BAR_HEIGHT = 55;
 
-export class StatisticController {
+const ICONS = {
+  'taxi': {
+    icon: `🚕`,
+    title: `Taxi to`,
+    type: `move`
+  },
+  'bus': {
+    icon: `🚌`,
+    title: `Get to`,
+    type: `move`
+  },
+  'train': {
+    icon: `🚄`,
+    title: `Get to`,
+    type: `move`
+  },
+  'ship': {
+    icon: `🛳️`,
+    title: `Take a boat trip on`,
+    type: `move`
+  },
+  'transport': {
+    icon: `🚊`,
+    title: `Get to stop`,
+    type: `move`
+  },
+  'drive': {
+    icon: `🚗`,
+    title: `Drive to`,
+    type: `move`
+  },
+  'flight': {
+    icon: `✈️`,
+    title: `Flight to`,
+    type: `move`
+  },
+  'check-in': {
+    icon: `🏨`,
+    title: `Check into`,
+    type: `place`
+  },
+  'sightseeing': {
+    icon: `🏛️`,
+    title: `Take a look at`,
+    type: `place`
+  },
+  'restaurant': {
+    icon: `🍴`,
+    title: `Visit the restaurant`,
+    type: `place`
+  }
+};
+
+class StatisticController {
   constructor(container, points) {
     this._container = container;
     this._statistics = new Statistics();
@@ -112,38 +164,40 @@ export class StatisticController {
 
   _getDurationOfTypePoint() {
     let durationOfTypePoint = {};
-    this._points.forEach((elementData) => {
-      const label = this._getLabel(durationOfTypePoint, elementData);
-      durationOfTypePoint[label] += Math.round(this._getRawDuration(elementData).asHours());
+    this._points.forEach((point) => {
+      const label = this._getLabel(durationOfTypePoint, point);
+      durationOfTypePoint[label] += Math.round(this._getRawDuration(point).asHours());
     });
     return durationOfTypePoint;
   }
 
   _getMoneySummary() {
     let moneySummary = {};
-    this._points.forEach((elementData) => {
-      const label = this._getLabel(moneySummary, elementData);
-      moneySummary[label] += elementData.price;
+    this._points.forEach((point) => {
+      const label = this._getLabel(moneySummary, point);
+      moneySummary[label] += point.price;
     });
     return moneySummary;
   }
 
   _getUseOfTransport() {
     let useOfTransport = {};
-    this._points.forEach((elementData) => {
-      if (TYPES_MAP[elementData.type].type === `move`) {
-        const label = this._getLabel(useOfTransport, elementData);
+    this._points.forEach((point) => {
+      if (ICONS[point.type].type === `move`) {
+        const label = this._getLabel(useOfTransport, point);
         useOfTransport[label] += 1;
       }
     });
     return useOfTransport;
   }
 
-  _getLabel(obj, elementData) {
-    const label = `${TYPES_MAP[elementData.type].icon} ${elementData.type.toUpperCase()}`;
+  _getLabel(obj, point) {
+    const label = `${ICONS[point.type].icon} ${point.type.toUpperCase()}`;
     if (!obj[label]) {
       obj[label] = 0;
     }
     return label;
   }
 }
+
+export default StatisticController;

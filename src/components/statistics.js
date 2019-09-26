@@ -1,6 +1,6 @@
-import {AbstractComponent} from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 
-export class Statistics extends AbstractComponent {
+class Statistics extends AbstractComponent {
   getTemplate() {
     return `<section class="statistics">
       <h2 class="visually-hidden">Trip statistics</h2>
@@ -19,3 +19,5 @@ export class Statistics extends AbstractComponent {
     </section>`;
   }
 }
+
+export default Statistics;
