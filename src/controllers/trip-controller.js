@@ -34,18 +34,18 @@ class TripController {
   }
 
   renderDays(points) {
-    let sortType = getSortType();
+    const sortType = getSortType();
 
     this._underderContainer();
     points = sortByDate(points);
-    let daysContainer = document.querySelector(`.trip-days`);
+    const daysContainer = document.querySelector(`.trip-days`);
     let index = 0;
     let dayCounter = 0;
     let previousDate = 0;
     const allDates = this._findDates(points);
     allDates.forEach((day) => {
 
-      let days = points.filter((obj) => moment(obj.startTime).format(`MM/DD`) === day);
+      let days = points.filter((point) => moment(point.startTime).format(`MM/DD`) === day);
       dayCounter += this._showDays(previousDate, days[0].startTime);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       previousDate = previousDate === 0 ? days[0].startTime : previousDate;
@@ -53,7 +53,7 @@ class TripController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._tripTypes, this._destinations);
+        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -64,13 +64,13 @@ class TripController {
   _renderForSort(points) {
 
     this._underderContainer();
-    let daysContainer = document.querySelector(`.trip-days`);
+    const daysContainer = document.querySelector(`.trip-days`);
     let index = 0;
     let dayCounter = 0;
     const allDates = this._findDates(points);
 
     allDates.forEach((day) => {
-      let days = points.filter((obj) => moment(obj.startTime).format(`MM/DD`) === day);
+      let days = points.filter((point) => moment(point.startTime).format(`MM/DD`) === day);
       let dayElement = new Day(days[0].startTime, days.length, dayCounter);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
@@ -85,7 +85,7 @@ class TripController {
 
   _underderContainer() {
     unrender(document.querySelector(`.event--edit`));
-    let containerChilds = this._container.querySelectorAll(`.trip-days__item`);
+    const containerChilds = this._container.querySelectorAll(`.trip-days__item`);
     containerChilds.forEach((item) => unrender(item));
     this._creatingPoint = null;
   }

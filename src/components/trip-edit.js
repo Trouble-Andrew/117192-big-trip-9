@@ -1,15 +1,15 @@
-import EventItemComponent from './trip-item-component.js';
+import TripItemComponent from './trip-item-component.js';
 import {pretext} from './../utils.js';
 import moment from 'moment';
 
-class TripItemEdit extends EventItemComponent {
-  constructor(params, mode, tripTypes, cities, id) {
+class TripEdit extends TripItemComponent {
+  constructor(params, mode, types, cities, id) {
     super(params);
     this._mode = mode;
     this._params = params;
     this._id = id;
     this._cities = cities;
-    this._tripTypes = tripTypes;
+    this._types = types;
 
     this._changeType();
     this._changeOptionsByType();
@@ -18,8 +18,8 @@ class TripItemEdit extends EventItemComponent {
   }
 
   _changeType() {
-    let item = this;
-    let allElems = this.getElement().querySelectorAll(`.event__type-input`);
+    const item = this;
+    const allElems = this.getElement().querySelectorAll(`.event__type-input`);
     allElems.forEach(function (elem) {
       elem.addEventListener(`click`, () => {
         item.getElement().querySelector(`.event__label`).innerHTML = pretext(elem.defaultValue.charAt(0).toUpperCase() + elem.defaultValue.slice(1));
@@ -37,7 +37,7 @@ class TripItemEdit extends EventItemComponent {
       .forEach((typeItem) => {
         typeItem.addEventListener(`click`, (evt) => {
           const target = evt.currentTarget;
-          const typeData = this._tripTypes.find(({type}) => type === target.value);
+          const typeData = this._types.find(({type}) => type === target.value);
 
           this.getElement().querySelector(`.event__type-icon`).src = `img/icons/${typeData.type}.png`;
           this.getElement().querySelector(`.event__type-toggle`).checked = false;
@@ -286,4 +286,4 @@ class TripItemEdit extends EventItemComponent {
   }
 }
 
-export default TripItemEdit;
+export default TripEdit;
