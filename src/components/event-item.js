@@ -1,12 +1,11 @@
-import {EventItemComponent} from './trip-item-component.js';
+import EventItemComponent from './trip-item-component.js';
 import {getFormattedTimeDifference, pretext} from './../utils.js';
 import moment from 'moment';
 
-export class TripItem extends EventItemComponent {
+class TripItem extends EventItemComponent {
   constructor(params) {
     super(params);
     this._allObj = params;
-    this._tripItemContainer = document.querySelector(`.trip-days`);
     this._MAX_OFFERS_COUNT = 3;
   }
 
@@ -47,3 +46,5 @@ export class TripItem extends EventItemComponent {
       `;
   }
 }
+
+export default TripItem;

@@ -1,8 +1,8 @@
-import {EventItemComponent} from './trip-item-component.js';
+import EventItemComponent from './trip-item-component.js';
 import {pretext} from './../utils.js';
 import moment from 'moment';
 
-export class TripItemEdit extends EventItemComponent {
+class TripItemEdit extends EventItemComponent {
   constructor(params, mode, tripTypes, cities, id) {
     super(params);
     this._mode = mode;
@@ -11,37 +11,16 @@ export class TripItemEdit extends EventItemComponent {
     this._cities = cities;
     this._tripTypes = tripTypes;
     this._changeType();
-    this._offersPriceAdder = this._offersPriceAdder.bind(this);
-
 
     this._changeOptionsByType();
     this._changeDescByCity();
     this._setNumbersOnly();
-    this._bind();
+    // this._bind();
   }
 
-  _bind() {
-    this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
-  }
-
-  _offersPriceAdder() {
-    // const formData = new FormData(this.getElement());
-    // event__available-offers
-    // console.log(formData.get(`event__offer-checkbox`));
-    // let counter = 0;
-    // let checkedOffers = _.filter(this._offers, [`accepted`, true]);
-    // checkedOffers.forEach((i) => counter + i.price);
-
-    // console.log((_.filter(this._offers, [`accepted`, true]).reduce((accumulator, i) => accumulator + i.price), 0));
-
-    // checkedOffers.forEach(function (item) {
-    //   counter += item.price;
-    // });
-    // console.log(counter);
-    // console.log(this.getElement().querySelector(`#event-price-1`).value);
-    // this.getElement().querySelector(`#event-price-1`).value = 999;
-    // this._price = 999;
-  }
+  // _bind() {
+  //   this.getElement().querySelector(`.event__available-offers`).addEventListener(`change`, this._offersPriceAdder);
+  // }
 
   _changeType() {
     let item = this;
@@ -313,3 +292,5 @@ export class TripItemEdit extends EventItemComponent {
       `;
   }
 }
+
+export default TripItemEdit;

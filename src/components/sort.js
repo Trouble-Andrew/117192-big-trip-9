@@ -1,6 +1,6 @@
-import {AbstractComponent} from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 
-export class Sort extends AbstractComponent {
+class Sort extends AbstractComponent {
   getTemplate() {
     return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
         <span class="trip-sort__item  trip-sort__item--day">Day</span>
@@ -35,3 +35,5 @@ export class Sort extends AbstractComponent {
       `;
   }
 }
+
+export default Sort;

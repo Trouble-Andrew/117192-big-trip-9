@@ -1,34 +1,28 @@
-import {getTripInfoTemplate} from './components/trip-info.js';
-import {TripControls} from './components/trip-controls.js';
-import {TripFilters} from './components/trip-filters.js';
-import {getTripDayTemplate} from './components/trip-day.js';
-import {Statistics} from './components/statistics.js';
+import TripInfo from './components/trip-info.js';
+import TripControls from './components/trip-controls.js';
+import TripFilters from './components/trip-filters.js';
+import TripDay from './components/trip-day.js';
+import Statistics from './components/statistics.js';
 import LoadingMessage from "./components/loading-message.js";
+import TripController from './controllers/trip-controller.js';
+import StatisticController from './controllers/statistics-controller.js';
 import {fillTripInfo, getAddNewEvent, render, unrender, Position, getFilterType, setDisabledValue} from './utils.js';
-import {renderComponent} from './render.js';
-// import {mockArray} from './data.js';
-import {TripController} from './controllers/trip-controller.js';
-import {StatisticController} from './controllers/statistics-controller.js';
 import API from "./api.js";
 import * as _ from 'lodash';
 
-const tripInfoContainer = document.querySelector(`.trip-info`);
+const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
+const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
+const api = new API(END_POINT, AUTHORIZATION);
+const tripInfoContainer = document.querySelector(`.trip-main`);
 const newPointButton = document.querySelector(`.trip-main__event-add-btn`);
 const pageContainer = document.querySelector(`.page-main .page-body__container`);
 const tripControlsContainer = document.querySelector(`.trip-controls h2:nth-child(2)`);
 const tripEventsContainer = document.querySelector(`.trip-events`);
 const tripFilters = new TripFilters();
 const tripControls = new TripControls();
+const tripInfo = new TripInfo();
+const tripDay = new TripDay();
 const loadingMessage = new LoadingMessage();
-let statistics = new Statistics();
-
-let statisticController = null;
-
-let tripController = null;
-
-const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
-const END_POINT = `https://htmlacademy-es-9.appspot.com/big-trip`;
-const api = new API(END_POINT, AUTHORIZATION);
 
 const filterPointsHandler = (element) => {
   const filterAll = `filter-everything`;
@@ -109,6 +103,9 @@ const onDataChange = (actionType, update, onError) => {
   }
 };
 
+let statistics = new Statistics();
+let statisticController = null;
+let tripController = null;
 let tripsData = null;
 let tripTypesWithOptions = null;
 let citiesWithDescription = null;
@@ -137,13 +134,11 @@ api.getData({url: `offers`})
 
 statistics.getElement().classList.add(`visually-hidden`);
 render(pageContainer, statistics.getElement(), Position.AFTERBEGIN);
-render(pageContainer, loadingMessage.getElement(), `beforeend`);
-renderComponent(getTripInfoTemplate(), tripInfoContainer, 1, `afterbegin`);
-
-
+render(pageContainer, loadingMessage.getElement(), Position.BEFOREEND);
+render(tripInfoContainer, tripInfo.getElement(), Position.AFTERBEGIN);
 render(tripControlsContainer, tripControls.getElement(), Position.BEFORE);
 render(tripControlsContainer, tripFilters.getElement(), Position.BEFORE);
-renderComponent(getTripDayTemplate(), tripEventsContainer);
+render(tripEventsContainer, tripDay.getElement(), Position.AFTERBEGIN);
 
 tripControls.getElement().addEventListener(`click`, (evt) => {
   const table = tripControls.getElement().querySelector(`.trip-tabs__btn`);
@@ -184,7 +179,6 @@ newPointButton.addEventListener(`click`, (evt) => {
 
 tripFilters.getElement().addEventListener(`change`, (evt) => {
   evt.preventDefault();
-
   if (evt.target.tagName !== `INPUT`) {
     return;
   }

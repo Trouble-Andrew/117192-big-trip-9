@@ -24,7 +24,7 @@ export const getFormattedTimeDifference = function (start, end) {
   return `${daysPart} ${hoursPart} ${minutesPart}`;
 };
 
-export const sortArrayOfObjByDate = function (tripPoints) {
+export const sortByDate = function (tripPoints) {
   let byDate = tripPoints.slice(0);
   return byDate.sort(function (a, b) {
     return a.startTime - b.startTime;
@@ -32,7 +32,7 @@ export const sortArrayOfObjByDate = function (tripPoints) {
 };
 
 export const fillTripInfo = (tripPoints) => {
-  tripPoints = sortArrayOfObjByDate(tripPoints);
+  tripPoints = sortByDate(tripPoints);
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   let tripCities = [];
   let tripDates = new Set([]);
@@ -66,10 +66,6 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export const removeElement = (element) => {
-  element.remove();
-};
-
 export const render = (container, element, place) => {
   switch (place) {
     case Position.AFTERBEGIN:
@@ -92,7 +88,7 @@ export const unrender = (element) => {
 
 export const getAddNewEvent = () => {
   let tripEventsContainer = document.querySelector(`.trip-events`);
-  let allEvents = tripEventsContainer.querySelectorAll(`.trip-days__item`);
+  let allEvents = document.querySelectorAll(`.trip-days__item`);
   if (allEvents.length === 0) {
     Array.from(tripEventsContainer.children).forEach((element) => element.classList.add(`visually-hidden`));
     tripEventsContainer.querySelector(`h2`).classList.add(`visually-hidden`);
@@ -144,19 +140,14 @@ export const pretext = (text) => {
 };
 
 export const getFilterType = () => {
-  const filters = document.querySelector(`.trip-filters`);
-  const filtersNodes = filters.querySelectorAll(`input`);
+  const filtersNodes = document.querySelectorAll(`input`);
   const checkedElement = Array.from(filtersNodes).filter((element) => element.checked === true);
-
   return checkedElement[0].id;
 };
 
 export const getSortType = () => {
-  const sort = document.querySelector(`.trip-sort`);
-
-  const sortNodes = sort.querySelectorAll(`input`);
+  const sortNodes = document.querySelectorAll(`.trip-sort__input`);
   const checkedElement = Array.from(sortNodes).filter((element) => element.checked === true);
-
   return checkedElement[0].id;
 };
 

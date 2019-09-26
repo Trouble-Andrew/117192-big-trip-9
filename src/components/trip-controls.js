@@ -1,4 +1,4 @@
-import {AbstractComponent} from './abstract-component.js';
+import AbstractComponent from './abstract-component.js';
 
 export class TripControls extends AbstractComponent {
   getTemplate() {
@@ -8,3 +8,5 @@ export class TripControls extends AbstractComponent {
     </nav>`;
   }
 }
+
+export default TripControls;
