@@ -1,7 +1,7 @@
-import {render, unrender, Position, sortByDate, getSortType} from './../utils.js';
+import {render, unrender, Position, sortByDate, getSortType, Mode} from './../utils.js';
 import Day from './../components/day.js';
 import Sort from './../components/sort.js';
-import {Mode as PointControllerMode, PointController} from './point-controller.js';
+import PointController from './point-controller.js';
 import moment from 'moment';
 
 class TripController {
@@ -53,7 +53,7 @@ class TripController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
       let tripDaysContainer = dayElement.getElement().querySelectorAll(`.trip-events__item`);
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
+        let pointController = new PointController(dayContainer, points[index], Mode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -76,7 +76,7 @@ class TripController {
       render(daysContainer, dayElement.getElement(), Position.BEFOREEND);
 
       Array.from(tripDaysContainer).forEach((dayContainer) => {
-        let pointController = new PointController(dayContainer, points[index], PointControllerMode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
+        let pointController = new PointController(dayContainer, points[index], Mode.DEFAULT, this._onDataChange, this._onChangeView, this._types, this._destinations);
         index += 1;
         this._subscriptions.push(pointController.setDefaultView.bind(pointController));
       });
@@ -168,7 +168,7 @@ class TripController {
     };
 
     this._onChangeView();
-    this._creatingPoint = new PointController(this._container.querySelector(`.trip-days`), defaultPoint, PointControllerMode.ADDING, (...args) => {
+    this._creatingPoint = new PointController(this._container.querySelector(`.trip-days`), defaultPoint, Mode.ADDING, (...args) => {
       this._creatingPoint = null;
       this._onDataChange(...args);
     }, this.onChangeView, this._types, this._destinations);

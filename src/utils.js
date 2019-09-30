@@ -46,6 +46,11 @@ export const fillTripInfo = (tripPoints) => {
   tripCostElem.innerHTML = tripPoints.length !== 0 ? `Total: &euro;&nbsp; ${tripCost.reduce(reducer) + totalOfferCost}` : `Total: &euro;&nbsp; 0`;
 };
 
+export const Mode = {
+  ADDING: `adding`,
+  DEFAULT: `default`,
+};
+
 export const Position = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`

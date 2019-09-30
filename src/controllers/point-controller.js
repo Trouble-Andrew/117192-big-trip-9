@@ -1,4 +1,4 @@
-import {render, unrender, Position} from './../utils.js';
+import {render, unrender, Position, Mode} from './../utils.js';
 import TripItem from './../components/event-item.js';
 import TripEdit from './../components/trip-edit.js';
 import moment from 'moment';
@@ -7,11 +7,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
 const ON_DATA_CHANGE_DELAY = 1000;
-
-export const Mode = {
-  ADDING: `adding`,
-  DEFAULT: `default`,
-};
 
 export class PointController {
   constructor(container, data, mode, onDataChange, onChangeView, types, destinations) {
@@ -249,3 +244,5 @@ export class PointController {
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 }
+
+export default PointController;
