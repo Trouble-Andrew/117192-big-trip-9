@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export class TripDay extends AbstractComponent {
+class TripDay extends AbstractComponent {
   getTemplate() {
     return `<ul class="trip-days"></ul>`;
   }
