@@ -8,7 +8,7 @@ import 'flatpickr/dist/themes/light.css';
 
 const ON_DATA_CHANGE_DELAY = 1000;
 
-export class PointController {
+class PointController {
   constructor(container, data, mode, onDataChange, onChangeView, types, destinations) {
     this._container = container;
     this._data = data;
